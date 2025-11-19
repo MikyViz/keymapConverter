@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Тест для Google / Input полей</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f8f9fa;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #5f6368;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .test-section h2 {
+            color: #202124;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .search-box:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 1px 6px rgba(26, 115, 232, 0.3);
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 15px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            margin: 10px 0;
+            outline: none;
+        }
+        
+        .input-field:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+        }
+        
+        .textarea-field {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 15px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            margin: 10px 0;
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+        
+        .textarea-field:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+        }
+        
+        .contenteditable {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 15px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            margin: 10px 0;
+            outline: none;
+            min-height: 80px;
+            background: #fafafa;
+        }
+        
+        .contenteditable:focus {
+            border-color: #1a73e8;
+            background: white;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+        }
+        
+        .example {
+            background: #f1f3f4;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        
+        .hint {
+            color: #5f6368;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .success {
+            color: #1e8e3e;
+            font-weight: 500;
+        }
+        
+        .shortcuts {
+            background: #e8f0fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .shortcuts strong {
+            color: #1a73e8;
+        }
+        
+        .key {
+            background: #1a73e8;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Тест Keymap Converter для Input полей</h1>
+            <p class="subtitle">Проверка работы в Google-подобных интерфейсах</p>
+        </div>
+        
+        <div class="shortcuts">
+            <strong>⌨️ Используйте горячие клавиши:</strong><br>
+            <span class="key">Ctrl+Shift+K</span> - Автоматическое меню |
+            <span class="key">Ctrl+Shift+E</span> - English |
+            <span class="key">Ctrl+Shift+R</span> - Русский |
+            <span class="key">Ctrl+Shift+H</span> - עברית
+        </div>
+        
+        <!-- Google Search Style -->
+        <div class="test-section">
+            <h2>🔍 Поисковая строка (Google Style)</h2>
+            <input type="text" class="search-box" placeholder="Введите текст для конвертации..." value="privet kak dela">
+            <p class="hint">Выделите текст внутри поисковой строки и нажмите Ctrl+Shift+K</p>
+            <div class="example">
+                Тест: Выделите "privet kak dela" → Ctrl+Shift+R → Должно стать: "привет как дела"
+            </div>
+        </div>
+        
+        <!-- Regular Input -->
+        <div class="test-section">
+            <h2>📝 Обычные Input поля</h2>
+            <input type="text" class="input-field" placeholder="Имя" value="test text">
+            <input type="email" class="input-field" placeholder="Email" value="hello world">
+            <input type="text" class="input-field" placeholder="Телефон" value="ruddщ цщкдв">
+            <p class="hint">Выделите текст в любом поле и конвертируйте</p>
+        </div>
+        
+        <!-- Textarea -->
+        <div class="test-section">
+            <h2>📄 Textarea (многострочное поле)</h2>
+            <textarea class="textarea-field" placeholder="Введите многострочный текст...">privet moy drug
+kak tvoi dela
+test ntcn</textarea>
+            <p class="hint">Выделите несколько строк и конвертируйте</p>
+        </div>
+        
+        <!-- ContentEditable -->
+        <div class="test-section">
+            <h2>✏️ ContentEditable (как в Gmail)</h2>
+            <div class="contenteditable" contenteditable="true">
+Привет! Это редактируемый div элемент.
+Такие используются в Gmail, Google Docs и других сервисах.
+Попробуйте конвертировать: privet kak dela
+            </div>
+            <p class="hint">Gmail использует contenteditable элементы для редактирования писем</p>
+        </div>
+        
+        <!-- Mixed Content -->
+        <div class="test-section">
+            <h2>🎯 Комплексный тест</h2>
+            <input type="text" class="input-field" placeholder="Латиница на русской раскладке" value="ghbdtn">
+            <input type="text" class="input-field" placeholder="Русские буквы на английской" value="руддщ">
+            <input type="text" class="input-field" placeholder="Смешанный текст" value="hello мир world">
+            <p class="hint">Проверьте все варианты конвертации</p>
+        </div>
+        
+        <!-- Test Results -->
+        <div class="test-section">
+            <h2>✅ Чеклист проверки</h2>
+            <p>После тестирования убедитесь что:</p>
+            <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                <li>✅ Горячие клавиши работают в поисковой строке</li>
+                <li>✅ Горячие клавиши работают в обычных input полях</li>
+                <li>✅ Работает в textarea (многострочные поля)</li>
+                <li>✅ Работает в contenteditable элементах</li>
+                <li>✅ Плавающая кнопка 🌐 появляется при выделении</li>
+                <li>✅ Контекстное меню (ПКМ) работает</li>
+                <li>✅ Текст заменяется прямо в поле (не только копируется)</li>
+                <li>✅ Уведомления показываются после конвертации</li>
+            </ul>
+        </div>
+        
+        <!-- Console Instructions -->
+        <div class="test-section" style="background: #fff3e0; border-left: 4px solid #ff9800;">
+            <h2>🔍 Отладка (Console F12)</h2>
+            <p style="color: #e65100; margin-bottom: 10px;"><strong>Откройте консоль разработчика (F12) и проверьте логи:</strong></p>
+            <div class="example">
+🚀 Keymap Converter загружен и готов!<br>
+🔘 Плавающая кнопка создана<br>
+⌨️ Горячие клавиши активированы: Ctrl+Shift+K/E/R/H<br>
+📨 Получено сообщение: {action: "convertSelection", layout: "ru"}<br>
+🔄 Конвертация: privet kak dela в ru<br>
+✅ Текст заменен в input/textarea: привет как дела
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        console.log('🌐 Тестовая страница для Input полей загружена');
+        console.log('📋 Готово к тестированию Keymap Converter');
+        
+        // Добавляем подсветку активного элемента
+        document.addEventListener('focusin', (e) => {
+            if (e.target.classList.contains('input-field') || 
+                e.target.classList.contains('search-box') || 
+                e.target.classList.contains('textarea-field') ||
+                e.target.classList.contains('contenteditable')) {
+                console.log('📝 Фокус на элементе:', e.target.tagName, e.target.type || 'contenteditable');
+            }
+        });
+        
+        // Логируем выделение текста
+        document.addEventListener('selectionchange', () => {
+            const activeElement = document.activeElement;
+            if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+                const start = activeElement.selectionStart;
+                const end = activeElement.selectionEnd;
+                if (start !== end) {
+                    const selected = activeElement.value.substring(start, end);
+                    console.log('📝 Выделен текст в input/textarea:', selected);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

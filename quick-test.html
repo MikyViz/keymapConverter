@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Быстрый тест Keymap Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .shortcuts {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .shortcuts h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .shortcut {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .key {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .description {
+            color: #555;
+        }
+        
+        .test-area {
+            margin: 20px 0;
+        }
+        
+        .test-area h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .test-text {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            cursor: text;
+            user-select: text;
+            font-size: 16px;
+            line-height: 1.6;
+            transition: background 0.2s;
+        }
+        
+        .test-text:hover {
+            background: #e9ecef;
+        }
+        
+        .test-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        
+        .test-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .status {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .emoji {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .instruction {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .example {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .before {
+            color: #d32f2f;
+        }
+        
+        .after {
+            color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="emoji">🌐</span>Тест Keymap Converter</h1>
+        <p class="subtitle">Проверка работы браузерного расширения</p>
+        
+        <div class="status">
+            <strong>✅ Расширение должно быть установлено!</strong><br>
+            Если вы ещё не установили расширение, следуйте инструкции в INSTALL-BROWSER-EXTENSION.md
+        </div>
+        
+        <div class="shortcuts">
+            <h2>⌨️ Горячие клавиши для теста:</h2>
+            <div class="shortcut">
+                <span class="key">Ctrl+Shift+K</span>
+                <span class="description">Автоматическое меню (рекомендуется)</span>
+            </div>
+            <div class="shortcut">
+                <span class="key">Ctrl+Shift+E</span>
+                <span class="description">→ English</span>
+            </div>
+            <div class="shortcut">
+                <span class="key">Ctrl+Shift+R</span>
+                <span class="description">→ Русский</span>
+            </div>
+            <div class="shortcut">
+                <span class="key">Ctrl+Shift+H</span>
+                <span class="description">→ עברית (иврит)</span>
+            </div>
+        </div>
+        
+        <div class="instruction">
+            <strong>📋 Как тестировать:</strong><br>
+            1. Выделите текст мышкой<br>
+            2. Нажмите Ctrl+Shift+K (или другую комбинацию)<br>
+            3. Выберите нужную раскладку из меню<br>
+            4. Текст должен конвертироваться!
+        </div>
+        
+        <div class="test-area">
+            <h3>🔤 Тест 1: Английский → Русский</h3>
+            <div class="test-text">privet kak dela</div>
+            <div class="example">
+                <span class="before">БЫЛО:</span> privet kak dela<br>
+                <span class="after">ДОЛЖНО СТАТЬ:</span> привет как дела
+            </div>
+        </div>
+        
+        <div class="test-area">
+            <h3>🔤 Тест 2: Русский → Английский</h3>
+            <div class="test-text">руддщ цщкдв</div>
+            <div class="example">
+                <span class="before">БЫЛО:</span> руддщ цщкдв<br>
+                <span class="after">ДОЛЖНО СТАТЬ:</span> hello world
+            </div>
+        </div>
+        
+        <div class="test-area">
+            <h3>🔤 Тест 3: В поле ввода</h3>
+            <input type="text" class="test-input" value="test ntcn 12345" placeholder="Выделите и конвертируйте...">
+        </div>
+        
+        <div class="test-area">
+            <h3>🔤 Тест 4: В текстовом поле</h3>
+            <textarea class="test-input" rows="4">ghbdtn vbh
+jxtym [jhjibq ltym
+ltv gjljhfdbcz</textarea>
+        </div>
+        
+        <div class="test-area">
+            <h3>🔤 Тест 5: Длинный текст</h3>
+            <div class="test-text">
+                Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+            </div>
+        </div>
+        
+        <div class="instruction">
+            <strong>🔍 Что проверить:</strong><br>
+            ✅ Плавающая кнопка 🌐 появляется при выделении<br>
+            ✅ Горячие клавиши работают<br>
+            ✅ Контекстное меню (ПКМ) содержит пункт "Конвертировать текст"<br>
+            ✅ Текст конвертируется правильно<br>
+            ✅ Появляются уведомления после конвертации<br>
+            ✅ Текст копируется в буфер обмена
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0; color: #666; text-align: center;">
+            <p>🐛 Откройте Console (F12) чтобы видеть логи работы расширения</p>
+            <p style="margin-top: 10px; font-size: 14px;">Должны быть логи: 🚀 Keymap Converter загружен и готов!</p>
+        </div>
+    </div>
+    
+    <script>
+        console.log('🌐 Тестовая страница Keymap Converter загружена');
+        console.log('📄 Проверьте что расширение инжектировано');
+        console.log('⏰ Текущее время:', new Date().toLocaleString());
+        
+        // Добавляем обработчик выделения для визуализации
+        document.addEventListener('selectionchange', () => {
+            const selection = window.getSelection().toString();
+            if (selection.trim()) {
+                console.log('📝 Выделен текст:', selection);
+            }
+        });
+    </script>
+</body>
+</html>

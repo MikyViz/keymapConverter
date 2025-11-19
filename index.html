@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keymap Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌐 Keymap Converter</h1>
+            <p>Конвертируйте текст между раскладками: Русская ⇄ English ⇄ עברית</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <label for="inputText">Введите текст:</label>
+                <textarea 
+                    id="inputText" 
+                    placeholder="Введите или вставьте текст для конвертации... Выделите текст для быстрой конвертации!"
+                    rows="6"></textarea>
+                <div class="selection-info" id="selectionInfo">
+                    💡 Выделите текст для автоматической конвертации
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="auto-convert">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="autoConvert" checked>
+                        <span class="toggle-slider"></span>
+                        🔄 Автоконвертация при выделении
+                    </label>
+                </div>
+                <div class="layout-buttons">
+                    <button class="layout-btn active" data-layout="auto">🎯 Авто</button>
+                    <button class="layout-btn" data-layout="en">🇺🇸 English</button>
+                    <button class="layout-btn" data-layout="ru">🇷🇺 Русский</button>
+                    <button class="layout-btn" data-layout="he">🇮🇱 עברית</button>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <label for="outputText">Результат конвертации:</label>
+                <div class="output-container">
+                    <div class="output-variants" id="outputVariants">
+                        <!-- Варианты конвертации будут добавлены динамически -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section hidden" id="infoSection">
+                <h3>📊 Детальная информация о символах</h3>
+                <div id="detailsOutput"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Уведомление -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Подключение нашей реализации keymap-inspector -->
+    <script src="simple-keymap.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

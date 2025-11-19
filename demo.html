@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keymap Converter Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .demo-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .example-text {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .highlight {
+            background: yellow;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌐 Keymap Converter - Демо</h1>
+    
+    <div class="demo-section">
+        <h2>🎯 Попробуйте выделить текст:</h2>
+        
+        <h3>Русский текст (попробуйте выделить):</h3>
+        <div class="example-text">
+            Привет мир! Как дела? Это тестовый текст для демонстрации.
+        </div>
+        
+        <h3>English text (try selecting):</h3>
+        <div class="example-text">
+            Hello world! How are you? This is a test text for demonstration.
+        </div>
+        
+        <h3>עברית (נסה לבחור):</h3>
+        <div class="example-text">
+            שלום עולם! איך אתה? זה טקסט בדיקה להדגמה.
+        </div>
+        
+        <h3>Mixed languages:</h3>
+        <div class="example-text">
+            hello мир shalom עולם test тест בדיקה
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🔧 Как использовать в VS Code:</h2>
+        <ol>
+            <li>Выделите любой текст в редакторе</li>
+            <li>Нажмите <span class="highlight">Ctrl+Shift+K</span></li>
+            <li>Выберите нужную раскладку из списка</li>
+            <li>Текст будет заменен и скопирован в буфер обмена</li>
+        </ol>
+        
+        <h3>Горячие клавиши:</h3>
+        <ul>
+            <li><span class="highlight">Ctrl+Shift+K</span> - Универсальная конвертация</li>
+            <li><span class="highlight">Ctrl+Shift+E</span> - В английскую раскладку</li>
+            <li><span class="highlight">Ctrl+Shift+R</span> - В русскую раскладку</li>
+            <li><span class="highlight">Ctrl+Shift+H</span> - В ивритскую раскладку</li>
+        </ul>
+    </div>
+
+    <div class="demo-section">
+        <h2>🌐 Веб-версия:</h2>
+        <p>Откройте <a href="index.html" target="_blank">index.html</a> для полноценной веб-версии приложения.</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>💡 Примеры конвертации:</h2>
+        
+        <div class="example-text">
+            <strong>RU → EN:</strong><br>
+            "ghbdtn" → "привет"<br>
+            "rfr ltkf" → "как дела"
+        </div>
+        
+        <div class="example-text">
+            <strong>EN → RU:</strong><br>
+            "hello" → "руддщ"<br>
+            "world" → "цщкдв"
+        </div>
+        
+        <div class="example-text">
+            <strong>EN → HE:</strong><br>
+            "hello" → "יקדדם"<br>
+            "shalom" → "שהךםם"
+        </div>
+    </div>
+</body>
+</html>

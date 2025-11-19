@@ -1,0 +1,101 @@
+/* Keymap Converter - Content Script Styles */
+
+/* Анимация для уведомлений */
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+/* Анимация для появления меню */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Плавающая кнопка */
+#keymap-converter-float-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 2147483647;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    user-select: none;
+    border: none;
+    animation: fadeIn 0.3s ease;
+}
+
+#keymap-converter-float-btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+/* Меню конвертации */
+#keymap-converter-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    padding: 25px;
+    z-index: 2147483646;
+    max-width: 500px;
+    min-width: 400px;
+    font-family: Arial, sans-serif;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Уведомления */
+.keymap-converter-notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    z-index: 2147483647;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 300px;
+    animation: slideInFromRight 0.3s ease;
+}
+
+.keymap-converter-notification.closing {
+    animation: slideOutToRight 0.3s ease;
+}

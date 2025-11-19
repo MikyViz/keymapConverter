@@ -1,0 +1,98 @@
+{
+  "name": "keymap-converter",
+  "version": "1.0.0",
+  "description": "Приложение для конвертации текста между раскладками клавиатуры (русская, английская, иврит)",
+  "main": "./out/extension.js",
+  "scripts": {
+    "dev": "live-server .",
+    "build": "npm run build:web && npm run build:vscode",
+    "build:web": "echo 'Web version ready'",
+    "build:vscode": "tsc -p ./",
+    "vscode:prepublish": "npm run build:vscode",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "keywords": [
+    "keyboard",
+    "layout",
+    "converter",
+    "russian",
+    "english",
+    "hebrew"
+  ],
+  "author": "Michael  David Vizenovsky",
+  "license": "MIT",
+  "dependencies": {
+    "keymap-inspector": "^0.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.122",
+    "@types/vscode": "^1.74.0",
+    "live-server": "^1.2.2",
+    "typescript": "^4.9.4"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "keymapConverter.convertSelection",
+        "title": "Convert Selected Text Layout",
+        "category": "Keymap Converter"
+      },
+      {
+        "command": "keymapConverter.convertToEnglish",
+        "title": "Convert to English Layout",
+        "category": "Keymap Converter"
+      },
+      {
+        "command": "keymapConverter.convertToRussian",
+        "title": "Convert to Russian Layout",
+        "category": "Keymap Converter"
+      },
+      {
+        "command": "keymapConverter.convertToHebrew",
+        "title": "Convert to Hebrew Layout",
+        "category": "Keymap Converter"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "keymapConverter.convertSelection",
+        "key": "ctrl+shift+k",
+        "when": "editorHasSelection || inputFocus"
+      },
+      {
+        "command": "keymapConverter.convertToEnglish",
+        "key": "ctrl+shift+e",
+        "when": "editorHasSelection || inputFocus"
+      },
+      {
+        "command": "keymapConverter.convertToRussian",
+        "key": "ctrl+shift+r",
+        "when": "editorHasSelection || inputFocus"
+      },
+      {
+        "command": "keymapConverter.convertToHebrew",
+        "key": "ctrl+shift+h",
+        "when": "editorHasSelection || inputFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "keymapConverter.convertSelection",
+          "when": "editorHasSelection",
+          "group": "1_modification"
+        }
+      ]
+    }
+  }
+}
