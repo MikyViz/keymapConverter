@@ -19,6 +19,7 @@
 ```bash
 npm install
 ```
+> **Примечание:** При установке автоматически копируется `keymap-inspector.js` из npm пакета в `browser-extension/` (postinstall hook)
 
 ### 🌐 Веб-приложение
 ```bash
@@ -33,10 +34,20 @@ npm run compile
 Нажмите F5 для запуска Extension Development Host
 
 ### 🌍 Браузерное расширение
-1. Откройте Chrome/Edge и перейдите в chrome://extensions/
+
+**Установка:**
+1. Откройте Chrome/Edge и перейдите в `chrome://extensions/`
 2. Включите "Режим разработчика"
 3. Нажмите "Загрузить распакованное расширение"
 4. Выберите папку `browser-extension`
+
+**Разработка:**
+```bash
+npm install              # Установка + автокопирование keymap-inspector.js
+npm run build:browser    # Ручное обновление keymap-inspector.js из npm пакета
+```
+
+> **Важно:** После изменений в коде нажмите "↻ Обновить" в `chrome://extensions/`
 
 ## ⌨️ Горячие клавиши
 
@@ -106,37 +117,51 @@ shalom → שהךםם
 - 🇮🇱 **Hebrew (HE)** - עברית
 
 ### Архитектура
-- **Веб-версия**: Vanilla JavaScript + keymap-inspector
-- **VS Code**: TypeScript расширение с полной интеграцией  
-- **Браузер**: Manifest V3 расширение с content/background scripts
-- **Общая логика**: keymap-inspector для точной конвертации
+- **Веб-версия**: Vanilla JavaScript + keymap-inspector (fallback)
+- **VS Code**: TypeScript расширение с keymap-inspector через require()
+- **Браузер**: Manifest V3 расширение с keymap-inspector browser bundle
+- **Общая логика**: keymap-inspector для точной конвертации раскладок
+
+### Интеграция keymap-inspector
+```javascript
+// VS Code Extension (Node.js)
+const { KeymapInspector, en, ru, he } = require('keymap-inspector');
+
+// Browser Extension (UMD bundle)
+const script = chrome.runtime.getURL('keymap-inspector.js');
+// → Автоматически копируется из node_modules при npm install
+```
 
 ## 📝 Разработка
 
 ### Команды
 ```bash
-npm run dev          # Запуск веб-версии
-npm run compile      # Компиляция VS Code расширения
-npm run watch        # Отслеживание изменений
-npm run build        # Сборка всех версий
+npm run dev               # Запуск веб-версии
+npm run compile           # Компиляция VS Code расширения
+npm run watch             # Отслеживание изменений
+npm run build             # Сборка всех версий
+npm run build:browser     # Обновление keymap-inspector.js в browser-extension
 ```
 
 ### Структура проекта
 ```
-├── src/                    # VS Code расширение
-│   ├── extension.ts        # Основная логика
-│   └── simple-keymap.ts    # Fallback реализация
-├── browser-extension/      # Браузерное расширение
-│   ├── manifest.json       # Манифест Chrome Extension
-│   ├── content.js          # Content script
-│   ├── background.js       # Background script
-│   ├── popup.html/js       # Popup интерфейс
-│   └── icons/              # Иконки расширения
-├── index.html             # Веб-приложение
-├── app.js                 # Логика веб-приложения
-├── styles.css             # Стили
-└── package.json           # Конфигурация проекта
+├── src/                         # VS Code расширение
+│   ├── extension.ts             # Основная логика
+│   └── simple-keymap.ts         # Fallback реализация
+├── browser-extension/           # Браузерное расширение
+│   ├── manifest.json            # Манифест Chrome Extension
+│   ├── content.js               # Content script с keymap-inspector интеграцией
+│   ├── background.js            # Background script
+│   ├── popup.html/js            # Popup интерфейс
+│   ├── keymap-inspector.js      # Browser bundle (генерируется из npm)
+│   └── icons/                   # Иконки расширения
+├── index.html                   # Веб-приложение
+├── app.js                       # Логика веб-приложения
+├── styles.css                   # Стили
+└── package.json                 # Конфигурация + build scripts
 ```
+
+> **Важно:** `browser-extension/keymap-inspector.js` генерируется автоматически из `node_modules/keymap-inspector/dist/keymap-inspector.browser.js` при установке зависимостей
 
 ## 🤝 Использование в GitHub Copilot
 

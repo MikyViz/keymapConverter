@@ -1,1 +1,3 @@
 node_modules
+# Генерируемые файлы из npm
+browser-extension/keymap-inspector.js
