@@ -27,35 +27,49 @@ class BrowserKeymapConverter {
     }
     
     async loadKeymapInspector() {
+        // keymap-inspector.js загружается автоматически через manifest.json
+        // Просто ждем немного на случай если скрипт еще не успел выполниться
         return new Promise((resolve, reject) => {
-            // Проверяем доступен ли keymap-inspector глобально
-            if (window.KeymapInspector) {
-                this.initializeInspector();
-                resolve();
-                return;
-            }
-            
-            // Загружаем скрипт
-            const script = document.createElement('script');
-            script.src = chrome.runtime.getURL('keymap-inspector.js');
-            script.onload = () => {
-                try {
-                    this.initializeInspector();
-                    resolve();
-                } catch (error) {
-                    reject(error);
+            const checkLoaded = () => {
+                if (typeof window.KeymapInspector !== 'undefined') {
+                    try {
+                        this.initializeInspector();
+                        resolve();
+                    } catch (error) {
+                        reject(error);
+                    }
+                } else {
+                    // Ждем еще немного
+                    setTimeout(checkLoaded, 50);
                 }
             };
-            script.onerror = () => reject(new Error('Не удалось загрузить keymap-inspector'));
-            (document.head || document.documentElement).appendChild(script);
+            
+            checkLoaded();
+            
+            // Таймаут на случай если что-то пошло не так
+            setTimeout(() => {
+                if (!this.inspector) {
+                    reject(new Error('KeymapInspector не загрузился за отведенное время'));
+                }
+            }, 5000);
         });
     }
     
     initializeInspector() {
-        const { KeymapInspector, en, ru, he } = window;
+        const KeymapInspector = window.KeymapInspector;
         
-        if (!KeymapInspector || !en || !ru || !he) {
-            throw new Error('KeymapInspector или раскладки не найдены');
+        if (!KeymapInspector) {
+            throw new Error('KeymapInspector не найден');
+        }
+        
+        // Получаем раскладки из разных мест, где они могут быть экспортированы
+        const en = window.en || (window.KeymapLayouts && window.KeymapLayouts.en) || KeymapInspector.en;
+        const ru = window.ru || (window.KeymapLayouts && window.KeymapLayouts.ru) || KeymapInspector.ru;
+        const he = window.he || (window.KeymapLayouts && window.KeymapLayouts.he) || KeymapInspector.he;
+        
+        if (!en || !ru || !he) {
+            console.error('Доступные объекты в window:', Object.keys(window).filter(k => k === 'KeymapInspector' || k === 'KeymapLayouts' || k === 'en' || k === 'ru' || k === 'he'));
+            throw new Error('Раскладки не найдены. EN: ' + !!en + ', RU: ' + !!ru + ', HE: ' + !!he);
         }
         
         // Инициализируем inspector с тремя раскладками
