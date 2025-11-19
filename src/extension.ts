@@ -124,7 +124,35 @@ class VSCodeKeymapConverter {
      * Конвертация в конкретную раскладку
      */
     private convertToLayout(text: string, targetLayout: string): string {
-        return this.inspector.convertText(text, targetLayout as 'en' | 'ru' | 'he');
+        let result = '';
+        
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            
+            // Проверяем не пробел/спецсимвол ли это
+            if (char === ' ' || char === '\n' || char === '\t' || char === '\r') {
+                result += char;
+                continue;
+            }
+            
+            try {
+                // Инспектируем символ
+                const inspection = this.inspector.inspect(char);
+                
+                if (inspection && inspection.layouts && inspection.layouts[targetLayout]) {
+                    // Конвертируем в целевую раскладку
+                    result += inspection.layouts[targetLayout];
+                } else {
+                    // Если конвертация невозможна, оставляем как есть
+                    result += char;
+                }
+            } catch (error) {
+                // В случае ошибки оставляем символ как есть
+                result += char;
+            }
+        }
+        
+        return result;
     }
 
     /**
