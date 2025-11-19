@@ -1,38 +1,66 @@
 /**
  * Content Script для Keymap Converter
- * Простая рабочая версия с горячими клавишами и контекстным меню
+ * Использует keymap-inspector npm пакет для конвертации
  */
 
 class BrowserKeymapConverter {
     constructor() {
-        this.layoutMaps = this.createLayoutMaps();
+        this.version = '2.0.0';
+        this.inspector = null;
         this.currentSelection = null;
-        this.setupEventListeners();
-        this.createFloatingButton();
-        this.setupKeyboardShortcuts();
-        console.log('🚀 Keymap Converter загружен и готов!');
+        this.init();
     }
-
-    createLayoutMaps() {
-        return {
-            // Английский -> Русский (QWERTY -> ЙЦУКЕН)
-            en_ru: {
-                'q': 'й', 'w': 'ц', 'e': 'у', 'r': 'к', 't': 'е', 'y': 'н', 'u': 'г', 'i': 'ш', 'o': 'щ', 'p': 'з',
-                '[': 'х', ']': 'ъ', 'a': 'ф', 's': 'ы', 'd': 'в', 'f': 'а', 'g': 'п', 'h': 'р', 'j': 'о', 'k': 'л',
-                'l': 'д', ';': 'ж', "'": 'э', 'z': 'я', 'x': 'ч', 'c': 'с', 'v': 'м', 'b': 'и', 'n': 'т', 'm': 'ь',
-                ',': 'б', '.': 'ю', '/': '.', '`': 'ё',
-                'Q': 'Й', 'W': 'Ц', 'E': 'У', 'R': 'К', 'T': 'Е', 'Y': 'Н', 'U': 'Г', 'I': 'Ш', 'O': 'Щ', 'P': 'З',
-                '{': 'Х', '}': 'Ъ', 'A': 'Ф', 'S': 'Ы', 'D': 'В', 'F': 'А', 'G': 'П', 'H': 'Р', 'J': 'О', 'K': 'Л',
-                'L': 'Д', ':': 'Ж', '"': 'Э', 'Z': 'Я', 'X': 'Ч', 'C': 'С', 'V': 'М', 'B': 'И', 'N': 'Т', 'M': 'Ь',
-                '<': 'Б', '>': 'Ю', '?': ',', '~': 'Ё'
-            },
-            // Английский -> Иврит
-            en_he: {
-                'q': 'ק', 'w': 'ו', 'e': 'ע', 'r': 'ר', 't': 'ת', 'y': 'י', 'u': 'ו', 'i': 'י', 'o': 'ו', 'p': 'פ',
-                'a': 'א', 's': 'ס', 'd': 'ד', 'f': 'פ', 'g': 'ג', 'h': 'ה', 'j': 'י', 'k': 'כ', 'l': 'ל',
-                'z': 'ז', 'x': 'ח', 'c': 'צ', 'v': 'ו', 'b': 'ב', 'n': 'נ', 'm': 'מ'
+    
+    async init() {
+        try {
+            // Загружаем keymap-inspector из скрипта
+            await this.loadKeymapInspector();
+            this.setupEventListeners();
+            this.createFloatingButton();
+            this.setupKeyboardShortcuts();
+            console.log('🚀 Keymap Converter v' + this.version + ' загружен и готов!');
+            console.log('✅ Используется keymap-inspector v0.1.5');
+            console.log('✅ Поддержка: INPUT, TEXTAREA, ContentEditable, обычный текст');
+        } catch (error) {
+            console.error('❌ Ошибка инициализации:', error);
+        }
+    }
+    
+    async loadKeymapInspector() {
+        return new Promise((resolve, reject) => {
+            // Проверяем доступен ли keymap-inspector глобально
+            if (window.KeymapInspector) {
+                this.initializeInspector();
+                resolve();
+                return;
             }
-        };
+            
+            // Загружаем скрипт
+            const script = document.createElement('script');
+            script.src = chrome.runtime.getURL('keymap-inspector.js');
+            script.onload = () => {
+                try {
+                    this.initializeInspector();
+                    resolve();
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            script.onerror = () => reject(new Error('Не удалось загрузить keymap-inspector'));
+            (document.head || document.documentElement).appendChild(script);
+        });
+    }
+    
+    initializeInspector() {
+        const { KeymapInspector, en, ru, he } = window;
+        
+        if (!KeymapInspector || !en || !ru || !he) {
+            throw new Error('KeymapInspector или раскладки не найдены');
+        }
+        
+        // Инициализируем inspector с тремя раскладками
+        this.inspector = new KeymapInspector({ en, ru, he });
+        console.log('✅ KeymapInspector инициализирован с раскладками: EN, RU, HE');
     }
 
     setupKeyboardShortcuts() {
@@ -365,17 +393,22 @@ class BrowserKeymapConverter {
     }
 
     convertTextToAllLayouts(text) {
+        if (!this.inspector) {
+            console.error('❌ Inspector не инициализирован');
+            return [];
+        }
+        
         const results = [];
         const layouts = ['en', 'ru', 'he'];
 
-        layouts.forEach(layout => {
+        layouts.forEach(targetLayout => {
             try {
-                const converted = this.convertToLayout(text, layout);
+                const converted = this.convertToLayout(text, targetLayout);
                 if (converted !== text && converted.trim()) {
-                    results.push({ layout, text: converted });
+                    results.push({ layout: targetLayout, text: converted });
                 }
             } catch (error) {
-                console.warn(`Ошибка конвертации в ${layout}:`, error);
+                console.warn(`Ошибка конвертации в ${targetLayout}:`, error);
             }
         });
 
@@ -383,36 +416,40 @@ class BrowserKeymapConverter {
     }
 
     convertToLayout(text, targetLayout) {
-        let result = '';
-
-        if (targetLayout === 'ru') {
-            // EN -> RU
-            result = Array.from(text).map(char => {
-                return this.layoutMaps.en_ru[char] || char;
-            }).join('');
-        } else if (targetLayout === 'en') {
-            // RU -> EN (создаем обратную карту)
-            const ruToEn = this.createReverseMap(this.layoutMaps.en_ru);
-            result = Array.from(text).map(char => {
-                return ruToEn[char] || char;
-            }).join('');
-        } else if (targetLayout === 'he') {
-            // EN -> HE
-            result = Array.from(text).map(char => {
-                const lower = char.toLowerCase();
-                return this.layoutMaps.en_he[lower] || char;
-            }).join('');
+        if (!this.inspector) {
+            throw new Error('Inspector не инициализирован');
         }
-
+        
+        // Конвертируем каждый символ используя keymap-inspector
+        let result = '';
+        
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            
+            // Проверяем не пробел/спецсимвол ли это
+            if (char === ' ' || char === '\n' || char === '\t') {
+                result += char;
+                continue;
+            }
+            
+            try {
+                // Инспектируем символ
+                const inspection = this.inspector.inspect(char);
+                
+                if (inspection && inspection.layouts && inspection.layouts[targetLayout]) {
+                    // Конвертируем в целевую раскладку
+                    result += inspection.layouts[targetLayout];
+                } else {
+                    // Если конвертация невозможна, оставляем как есть
+                    result += char;
+                }
+            } catch (error) {
+                // В случае ошибки оставляем символ как есть
+                result += char;
+            }
+        }
+        
         return result;
-    }
-
-    createReverseMap(originalMap) {
-        const reverseMap = {};
-        Object.entries(originalMap).forEach(([key, value]) => {
-            reverseMap[value] = key;
-        });
-        return reverseMap;
     }
 
     replaceSelectedText(newText) {

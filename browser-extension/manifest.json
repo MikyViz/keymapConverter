@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Keymap Converter",
-  "version": "1.0.0",
-  "description": "Конвертация текста между раскладками клавиатуры (русская, английская, иврит)",
+  "version": "2.0.0",
+  "description": "Конвертация текста между раскладками клавиатуры (русская, английская, иврит). Работает везде: Google, Gmail, GitHub и др.",
   
   "permissions": [
     "activeTab",

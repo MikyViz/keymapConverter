@@ -5,9 +5,11 @@
   "main": "./out/extension.js",
   "scripts": {
     "dev": "live-server .",
-    "build": "npm run build:web && npm run build:vscode",
+    "build": "npm run build:web && npm run build:vscode && npm run build:browser",
     "build:web": "echo 'Web version ready'",
     "build:vscode": "tsc -p ./",
+    "build:browser": "node -e \"require('fs').copyFileSync('node_modules/keymap-inspector/dist/keymap-inspector.browser.js', 'browser-extension/keymap-inspector.js')\" && echo 'Browser extension: keymap-inspector.js updated'",
+    "postinstall": "npm run build:browser",
     "vscode:prepublish": "npm run build:vscode",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./"
