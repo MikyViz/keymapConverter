@@ -1,247 +1,256 @@
 # 🌐 Keymap Converter
 
-Универсальное решение для конвертации текста между раскладками клавиатуры. Поддерживает русскую, английскую и ивритскую раскладки.
+Universal solution for converting text between keyboard layouts. Supports Russian, English, and Hebrew layouts.
 
-## ✨ Возможности
+## ✨ Features
 
-- 🔄 Автоматическая конвертация выделенного текста
-- 🎯 Умное определение лучшего варианта конвертации  
-- 📊 Детальный анализ символов и их соответствий
-- 🌐 Веб-приложение для использования в браузере
-- 🔧 Расширение для VS Code (включая GitHub Copilot Chat)
-- 🌍 Браузерное расширение для работы на любых сайтах
-- ⚡ Горячие клавиши для быстрой конвертации
-- 📋 Автоматическое копирование в буфер обмена
+- 🔄 Automatic text conversion between layouts
+- 🎯 Smart detection of the best conversion option
+- 📊 Detailed character analysis and mappings
+- 🌐 Web application for browser usage
+- 🔧 VS Code extension (including GitHub Copilot Chat support)
+- 🌍 Browser extension for any website
+- ⚡ Hotkeys for quick conversion
+- 📋 Automatic clipboard copy
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### 📦 Установка зависимостей
+### 📦 Install Dependencies
 ```bash
 npm install
 ```
-> **Примечание:** При установке автоматически копируется `keymap-inspector.js` из npm пакета в `browser-extension/` (postinstall hook)
+> **Note:** Installation automatically copies `keymap-inspector.js` from npm package to `browser-extension/` (postinstall hook)
 
-### 🌐 Веб-приложение
+### 🌐 Web Application
 ```bash
 npm run dev
 ```
-Откройте http://localhost:8080
+Open http://localhost:8080
 
-### 🔧 VS Code расширение
+### 🔧 VS Code Extension
 ```bash
 npm run compile
 ```
-Нажмите F5 для запуска Extension Development Host
+Press F5 to launch Extension Development Host
 
-### 🌍 Браузерное расширение
+### 🌍 Browser Extension
 
-**Установка (Chrome / Edge / Brave):**
+**Installation (Chrome / Edge / Brave):**
 
-1. **Откройте страницу расширений:**
+1. **Open extensions page:**
    - Chrome: `chrome://extensions/`
    - Edge: `edge://extensions/`
    - Brave: `brave://extensions/`
 
-2. **Включите режим разработчика** (Developer mode) в правом верхнем углу
+2. **Enable Developer mode** (toggle in top-right corner)
 
-3. **Загрузите расширение:**
-   - Нажмите "Load unpacked" / "Загрузить распакованное расширение"
-   - Выберите папку `browser-extension`
+3. **Load extension:**
+   - Click "Load unpacked"
+   - Select the `browser-extension` folder
 
-4. **Готово!** 🎉 Закрепите иконку на панели инструментов (pin icon)
+4. **Done!** 🎉 Pin the icon to toolbar for quick access
 
-**Разработка:**
+**Development:**
 ```bash
-npm install              # Установка + автокопирование keymap-inspector.js
-npm run build:browser    # Ручное обновление keymap-inspector.js из npm пакета
+npm install              # Install + auto-copy keymap-inspector.js
+npm run build:browser    # Manual update of keymap-inspector.js from npm package
 ```
 
-> **Важно:** После изменений в коде нажмите "↻ Обновить" в `chrome://extensions/`
+> **Important:** After code changes, click "↻ Reload" in `chrome://extensions/`
 
-## ⌨️ Горячие клавиши
+## ⌨️ Hotkeys
 
 ### VS Code:
-- `Ctrl+Shift+K` - Универсальная конвертация
-- `Ctrl+Shift+E` - В английскую раскладку
-- `Ctrl+Shift+R` - В русскую раскладку  
-- `Ctrl+Shift+H` - В ивритскую раскладку
+- `Ctrl+Shift+K` - Universal conversion
+- `Ctrl+Shift+E` - Convert to English
+- `Ctrl+Shift+R` - Convert to Russian
+- `Ctrl+Shift+H` - Convert to Hebrew
 
-### Браузер:
-- `Ctrl+Shift+K` - Универсальная конвертация
-- `Ctrl+Shift+E` - В английскую раскладку
-- `Ctrl+Shift+R` - В русскую раскладку  
-- `Ctrl+Shift+H` - В ивритскую раскладку
+### Browser:
+- `Ctrl+Shift+K` - Universal conversion
+- `Ctrl+Shift+E` - Convert to English
+- `Ctrl+Shift+R` - Convert to Russian
+- `Ctrl+Shift+H` - Convert to Hebrew
 
-## 🎯 Примеры использования
+## 🎯 Usage Examples
 
-### Русский ↔ Английский
+### Russian ↔ English
 ```
 ghbdtn → привет
 hello → руддщ
 ```
 
-### Английский ↔ Иврит
+### English ↔ Hebrew
 ```
 hello → יקדדם
 shalom → שהךםם
 ```
 
-##  Функциональность
+## 📋 Functionality
 
-### 🌐 Веб-версия
-- ✅ Автоконвертация при выделении текста
-- ✅ Переключение между режимами конвертации
-- ✅ Детальная информация о символах
-- ✅ Копирование результатов в буфер
-- ✅ Адаптивный дизайн
+### 🌐 Web Version
+- ✅ Auto-conversion on text selection
+- ✅ Switch between conversion modes
+- ✅ Detailed character information
+- ✅ Copy results to clipboard
+- ✅ Responsive design
 
-### 🔧 VS Code расширение
-- ✅ Работает в редакторе и GitHub Copilot Chat
-- ✅ Quick Pick для выбора варианта конвертации
-- ✅ Автоматическое копирование в буфер обмена
-- ✅ Замена выделенного текста
-- ✅ Детальный анализ в отдельном документе
-- ✅ Контекстное меню редактора
+### 🔧 VS Code Extension
+- ✅ Works in editor and GitHub Copilot Chat
+- ✅ Quick Pick for conversion variant selection
+- ✅ Automatic clipboard copy
+- ✅ Replace selected text
+- ✅ Detailed analysis in separate document
+- ✅ Editor context menu
 
-### 🌍 Браузерное расширение  
-- ✅ Работает на всех сайтах (Google, Gmail, GitHub, Slack и т.д.)
-- ✅ Поддержка INPUT, TEXTAREA, ContentEditable и обычного текста
-- ✅ Плавающая кнопка 🌐 при выделении текста
-- ✅ Контекстное меню (ПКМ)
-- ✅ Popup интерфейс для ручной конвертации
-- ✅ Умная замена текста с поддержкой React/Vue/Angular
-- ✅ Автоматическое копирование в буфер обмена
-- ✅ Уведомления об успешной конвертации
+### 🌍 Browser Extension
+- ✅ Works on all websites (Google, Gmail, GitHub, Slack, etc.)
+- ✅ Supports INPUT, TEXTAREA, ContentEditable and plain text
+- ✅ Floating 🌐 button on text selection
+- ✅ Right-click context menu
+- ✅ Popup interface for manual conversion
+- ✅ Smart text replacement with React/Vue/Angular support
+- ✅ Automatic clipboard copy
+- ✅ Success notifications
 
-## 🛠️ Технические детали
+## 🛠️ Technical Details
 
-### Зависимости
-- `keymap-inspector@0.1.5` - Библиотека для работы с раскладками
-- `@types/vscode@^1.74.0` - Типы для VS Code расширений
-- `@types/node@18` - Типы Node.js
-- `typescript@^4.9.4` - Компилятор TypeScript
-- `live-server@^1.2.2` - Локальный веб-сервер
+### Dependencies
+- `keymap-inspector@0.1.5` - Keyboard layout conversion library
+- `@types/vscode@^1.74.0` - VS Code extension types
+- `@types/node@18` - Node.js types
+- `typescript@^4.9.4` - TypeScript compiler
+- `live-server@^1.2.2` - Local web server
 
-### Поддерживаемые раскладки
+### Supported Layouts
 - 🇺🇸 **English (EN)** - QWERTY
-- 🇷🇺 **Russian (RU)** - ЙЦУКЕН  
+- 🇷🇺 **Russian (RU)** - ЙЦУКЕН
 - 🇮🇱 **Hebrew (HE)** - עברית
 
-### Архитектура
-- **Веб-версия**: Vanilla JavaScript + keymap-inspector (fallback)
-- **VS Code**: TypeScript расширение с keymap-inspector через require()
-- **Браузер**: Manifest V3 расширение с keymap-inspector browser bundle
-- **Общая логика**: keymap-inspector для точной конвертации раскладок
+### Architecture
+- **Web version**: Vanilla JavaScript + keymap-inspector (fallback)
+- **VS Code**: TypeScript extension with keymap-inspector via require()
+- **Browser**: Manifest V3 extension with keymap-inspector browser bundle
+- **Common logic**: keymap-inspector for precise layout conversion
 
-### Интеграция keymap-inspector
+### Keymap-Inspector Integration
 ```javascript
 // VS Code Extension (Node.js)
 const { KeymapInspector, en, ru, he } = require('keymap-inspector');
 
 // Browser Extension (UMD bundle)
 const script = chrome.runtime.getURL('keymap-inspector.js');
-// → Автоматически копируется из node_modules при npm install
+// → Automatically copied from node_modules on npm install
 ```
 
-## 📝 Разработка
+## 📝 Development
 
-### Команды
+### Commands
 ```bash
-npm run dev               # Запуск веб-версии
-npm run compile           # Компиляция VS Code расширения
-npm run watch             # Отслеживание изменений
-npm run build             # Сборка всех версий
-npm run build:browser     # Обновление keymap-inspector.js в browser-extension
+npm run dev               # Run web version
+npm run compile           # Compile VS Code extension
+npm run watch             # Watch for changes
+npm run build             # Build all versions
+npm run build:browser     # Update keymap-inspector.js in browser-extension
+npm run package           # Package VS Code extension (.vsix)
+npm run publish           # Publish to VS Code Marketplace
 ```
 
-### Структура проекта
+### Project Structure
 ```
-├── src/                         # VS Code расширение
-│   ├── extension.ts             # Основная логика
-│   └── simple-keymap.ts         # Fallback реализация
-├── browser-extension/           # Браузерное расширение
-│   ├── manifest.json            # Манифест Chrome Extension
-│   ├── content.js               # Content script с keymap-inspector интеграцией
+├── src/                         # VS Code extension
+│   ├── extension.ts             # Main logic
+│   └── simple-keymap.ts         # Fallback implementation
+├── browser-extension/           # Browser extension
+│   ├── manifest.json            # Chrome Extension manifest
+│   ├── content.js               # Content script with keymap-inspector
 │   ├── background.js            # Background script
-│   ├── popup.html/js            # Popup интерфейс
-│   ├── keymap-inspector.js      # Browser bundle (генерируется из npm)
-│   └── icons/                   # Иконки расширения
-├── index.html                   # Веб-приложение
-├── app.js                       # Логика веб-приложения
-├── styles.css                   # Стили
-└── package.json                 # Конфигурация + build scripts
+│   ├── popup.html/js            # Popup interface
+│   ├── keymap-inspector.js      # Browser bundle (generated from npm)
+│   └── icons/                   # Extension icons
+├── index.html                   # Web application
+├── app.js                       # Web app logic
+├── styles.css                   # Styles
+└── package.json                 # Configuration + build scripts
 ```
 
-> **Важно:** `browser-extension/keymap-inspector.js` генерируется автоматически из `node_modules/keymap-inspector/dist/keymap-inspector.browser.js` при установке зависимостей
+> **Important:** `browser-extension/keymap-inspector.js` is auto-generated from `node_modules/keymap-inspector/dist/keymap-inspector.browser.js` during dependency installation
 
-## 🤝 Использование в GitHub Copilot
+## 🤝 GitHub Copilot Integration
 
-### VS Code расширение автоматически работает в:
-- ✅ Основном редакторе
+### VS Code extension automatically works in:
+- ✅ Main editor
 - ✅ GitHub Copilot Chat
-- ✅ Любых текстовых полях VS Code
+- ✅ Any VS Code text field
 
-### Как использовать:
-1. Выделите текст в Copilot Chat
-2. Нажмите `Ctrl+Shift+K`
-3. Выберите нужную раскладку
-4. Текст будет заменен и скопирован
+### How to use:
+1. Select text in Copilot Chat
+2. Press `Ctrl+Shift+K`
+3. Choose target layout
+4. Text will be replaced and copied
 
-## 🌍 Использование браузерного расширения
+## 🌍 Browser Extension Usage
 
-### 🖱️ Способы конвертации:
+### 🖱️ Conversion Methods:
 
-**1. Плавающая кнопка 🌐:**
-- Выделите текст → появится кнопка → кликните для выбора раскладки
+**1. Floating 🌐 Button:**
+- Select text → button appears → click to choose layout
 
-**2. Контекстное меню (ПКМ):**
-- Выделите текст → правая кнопка мыши → "🌐 Конвертировать текст"
+**2. Context Menu (Right-Click):**
+- Select text → right-click → "🌐 Convert Text"
 
-**3. Горячие клавиши:**
-- `Ctrl+Shift+K` - Автоматическое меню выбора
-- `Ctrl+Shift+E` - В English
-- `Ctrl+Shift+R` - В Русский
-- `Ctrl+Shift+H` - В עברית
+**3. Hotkeys:**
+- `Ctrl+Shift+K` - Automatic selection menu
+- `Ctrl+Shift+E` - Convert to English
+- `Ctrl+Shift+R` - Convert to Russian
+- `Ctrl+Shift+H` - Convert to Hebrew (עברית)
 
-**4. Иконка расширения:**
-- Кликните на иконку в панели инструментов
+**4. Extension Icon:**
+- Click icon in toolbar
 
-### 🎯 Примеры:
+### 🎯 Examples:
 
 ```
-Набрали на английском вместо русского:
+Typed in English instead of Russian:
 privet kak dela → Ctrl+Shift+R → привет как дела
 
-Набрали на русском вместо английского:
+Typed in Russian instead of English:
 руддщ цщкдв → Ctrl+Shift+E → hello world
 ```
 
-### 🔧 Отладка:
+### 🔧 Troubleshooting:
 
-**Если не работают горячие клавиши:**
-- Откройте `chrome://extensions/shortcuts`
-- Проверьте назначенные сочетания для "Keymap Converter"
+**If hotkeys don't work:**
+- Open `chrome://extensions/shortcuts`
+- Check assigned shortcuts for "Keymap Converter"
 
-**Если не появляется кнопка:**
-- Нажмите F12 → Console
-- Должно быть: "✅ BrowserKeymapConverter инициализирован"
-- Обновите страницу (F5)
+**If button doesn't appear:**
+- Press F12 → Console
+- Should see: "✅ BrowserKeymapConverter инициализирован"
+- Refresh page (F5)
 
-**Полная переустановка:**
-1. Удалите расширение
-2. Обновите код: `npm run build:browser`
-3. Установите заново (см. раздел "Установка")
+**Full reinstall:**
+1. Remove extension
+2. Update code: `npm run build:browser`
+3. Reinstall (see Installation section)
 
-## 📄 Лицензия
+## 📦 VS Code Marketplace
+
+Install from VS Code Marketplace:
+👉 [Keymap Converter](https://marketplace.visualstudio.com/items?itemName=MooseBro.keymap-converter)
+
+Or search in VS Code Extensions: `Keymap Converter`
+
+## 📄 License
 
 MIT License
 
-## 🙏 Благодарности
+## 🙏 Credits
 
-- [keymap-inspector](https://github.com/MikyViz/keymap-inspector) - Мощная библиотека для работы с раскладками
-- VS Code API - За возможности расширений
-- Chrome Extensions API - За браузерную интеграцию
+- [keymap-inspector](https://github.com/MikyViz/keymap-inspector) - Powerful keyboard layout library
+- VS Code API - For extension capabilities
+- Chrome Extensions API - For browser integration
 
 ---
 
-💡 **Совет**: Настройте горячие клавиши под свои предпочтения для максимального удобства!
+💡 **Tip**: Configure hotkeys to your preference for maximum convenience!

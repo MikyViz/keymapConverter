@@ -1,7 +1,10 @@
 {
   "name": "keymap-converter",
-  "version": "1.0.0",
-  "description": "Приложение для конвертации текста между раскладками клавиатуры (русская, английская, иврит)",
+  "displayName": "Keymap Converter",
+  "version": "2.0.1",
+  "description": "Конвертация текста между раскладками клавиатуры (русская, английская, иврит). Convert text between keyboard layouts (Russian, English, Hebrew)",
+  "publisher": "MooseBro",
+  "icon": "./browser-extension/icons/icon128.png",
   "main": "./out/extension.js",
   "scripts": {
     "dev": "live-server .",
@@ -12,7 +15,9 @@
     "postinstall": "npm run build:browser",
     "vscode:prepublish": "npm run build:vscode",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "publish": "vsce publish"
   },
   "keywords": [
     "keyboard",
@@ -22,8 +27,16 @@
     "english",
     "hebrew"
   ],
-  "author": "Michael  David Vizenovsky",
+  "author": "Michael David Vizenovsky",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MikyViz/keymapConverter"
+  },
+  "bugs": {
+    "url": "https://github.com/MikyViz/keymapConverter/issues"
+  },
+  "homepage": "https://github.com/MikyViz/keymapConverter#readme",
   "dependencies": {
     "keymap-inspector": "^0.1.5"
   },
@@ -40,7 +53,7 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "contributes": {
     "commands": [
