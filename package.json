@@ -1,7 +1,7 @@
 {
   "name": "keymap-converter",
   "displayName": "Keymap Converter",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Конвертация текста между раскладками клавиатуры (русская, английская, иврит). Convert text between keyboard layouts (Russian, English, Hebrew)",
   "publisher": "MooseBro",
   "icon": "./browser-extension/icons/icon128.png",
@@ -16,8 +16,8 @@
     "vscode:prepublish": "npm run build:vscode",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "package": "vsce package",
-    "publish": "vsce publish"
+    "package": "vsce package --allow-star-activation",
+    "publish": "vsce publish --allow-star-activation"
   },
   "keywords": [
     "keyboard",
@@ -53,7 +53,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "*"
   ],
   "contributes": {
     "commands": [
