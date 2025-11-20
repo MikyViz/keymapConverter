@@ -8,7 +8,7 @@ chrome.runtime.onInstalled.addListener(() => {
     // Создаем контекстное меню для выделенного текста
     chrome.contextMenus.create({
         id: 'keymap-convert-selection',
-        title: '🌐 Конвертировать выделенный текст',
+        title: 'Конвертировать выделенный текст',
         contexts: ['selection']
     });
 

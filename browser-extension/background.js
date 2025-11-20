@@ -14,7 +14,7 @@ chrome.runtime.onInstalled.addListener(() => {
         // Родительское меню
         chrome.contextMenus.create({
             id: 'keymap-converter-parent',
-            title: '🌐 Конвертировать текст',
+            title: 'Конвертировать текст',
             contexts: ['selection']
         });
 
