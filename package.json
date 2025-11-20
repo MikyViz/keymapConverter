@@ -1,7 +1,7 @@
 {
   "name": "keymap-converter",
   "displayName": "Keymap Converter",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Конвертация текста между раскладками клавиатуры (русская, английская, иврит). Convert text between keyboard layouts (Russian, English, Hebrew)",
   "publisher": "MooseBro",
   "icon": "./browser-extension/icons/icon128.png",
