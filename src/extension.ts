@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 
-// Импортируем keymap-inspector
+// Import keymap-inspector
 const { KeymapInspector, en, ru, he } = require('keymap-inspector');
 
 /**
- * Класс для работы с конвертацией раскладок в VS Code
+ * Class for working with layout conversion in VS Code
  */
 class VSCodeKeymapConverter {
     private inspector: any;
@@ -15,17 +15,17 @@ class VSCodeKeymapConverter {
     };
 
     constructor() {
-        // Инициализируем keymap-inspector с поддерживаемыми раскладками
+        // Initialize keymap-inspector with supported layouts
         this.inspector = new KeymapInspector({ en, ru, he });
     }
 
     /**
-     * Показать Quick Pick для выбора раскладки и конвертации
+     * Show Quick Pick for layout selection and conversion
      */
     async convertSelectedText(): Promise<void> {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
-            vscode.window.showWarningMessage('Откройте файл для работы с текстом');
+            vscode.window.showWarningMessage('Open a file to work with text');
             return;
         }
 
@@ -33,25 +33,25 @@ class VSCodeKeymapConverter {
         const selectedText = editor.document.getText(selection);
 
         if (!selectedText) {
-            vscode.window.showWarningMessage('Выделите текст для конвертации');
+            vscode.window.showWarningMessage('Select text to convert');
             return;
         }
 
         try {
-            // Конвертируем во все доступные раскладки
+            // Convert to all available layouts
             const variants = this.convertTextToAllLayouts(selectedText);
             
             if (variants.length === 0) {
-                vscode.window.showInformationMessage('Текст не требует конвертации');
+                vscode.window.showInformationMessage('Text does not require conversion');
                 return;
             }
 
-            // Создаем варианты для Quick Pick
+            // Create variants for Quick Pick
             const layoutNames = this.layoutNames;
             const quickPickItems: vscode.QuickPickItem[] = [
                 {
-                    label: '🎯 Автоопределение',
-                    description: 'Выбрать лучший вариант автоматически',
+                    label: '🎯 Auto-detect',
+                    description: 'Choose the best option automatically',
                     detail: this.getBestConversion(selectedText, variants)
                 },
                 ...variants.map(variant => ({
@@ -60,14 +60,14 @@ class VSCodeKeymapConverter {
                     detail: variant.text
                 })),
                 {
-                    label: '📊 Показать детали',
-                    description: 'Подробная информация о символах',
-                    detail: 'Открыть окно с деталями конвертации'
+                    label: '📊 Show details',
+                    description: 'Detailed character information',
+                    detail: 'Open window with conversion details'
                 }
             ];
 
             const selected = await vscode.window.showQuickPick(quickPickItems, {
-                placeHolder: `Конвертировать "${selectedText.length > 30 ? selectedText.substring(0, 30) + '...' : selectedText}"`,
+                placeHolder: `Convert "${selectedText.length > 30 ? selectedText.substring(0, 30) + '...' : selectedText}"`,
                 title: 'Keymap Converter'
             });
 
@@ -75,32 +75,32 @@ class VSCodeKeymapConverter {
                 return;
             }
 
-            if (selected.label === '📊 Показать детали') {
+            if (selected.label === '📊 Show details') {
                 await this.showCharacterDetails(selectedText);
-            } else if (selected.label === '🎯 Автоопределение') {
+            } else if (selected.label === '🎯 Auto-detect') {
                 const bestConversion = this.getBestConversion(selectedText, variants);
                 await this.replaceText(editor, selection, bestConversion);
                 await this.copyToClipboard(bestConversion);
-                vscode.window.showInformationMessage(`✅ Текст конвертирован и скопирован в буфер`);
+                vscode.window.showInformationMessage(`✅ Text converted and copied to clipboard`);
             } else {
-                // Находим соответствующий вариант
+                // Find the matching variant
                 const variant = variants.find(v => 
                     layoutNames[v.layout as keyof typeof layoutNames] === selected.label
                 );
                 if (variant) {
                     await this.replaceText(editor, selection, variant.text);
                     await this.copyToClipboard(variant.text);
-                    vscode.window.showInformationMessage(`✅ Конвертировано в ${selected.label}`);
+                    vscode.window.showInformationMessage(`✅ Converted to ${selected.label}`);
                 }
             }
 
         } catch (error) {
-            vscode.window.showErrorMessage(`Ошибка конвертации: ${error}`);
+            vscode.window.showErrorMessage(`Conversion error: ${error}`);
         }
     }
 
     /**
-     * Конвертация текста во все поддерживаемые раскладки
+     * Convert text to all supported layouts
      */
     private convertTextToAllLayouts(text: string): Array<{layout: string, text: string}> {
         const results: Array<{layout: string, text: string}> = [];
@@ -113,7 +113,7 @@ class VSCodeKeymapConverter {
                     results.push({ layout, text: converted });
                 }
             } catch (error) {
-                console.warn(`Ошибка конвертации в ${layout}:`, error);
+                console.warn(`Error converting to ${layout}:`, error);
             }
         });
 
@@ -121,7 +121,7 @@ class VSCodeKeymapConverter {
     }
 
     /**
-     * Конвертация в конкретную раскладку
+     * Convert to specific layout
      */
     private convertToLayout(text: string, targetLayout: string): string {
         let result = '';
@@ -129,25 +129,25 @@ class VSCodeKeymapConverter {
         for (let i = 0; i < text.length; i++) {
             const char = text[i];
             
-            // Проверяем не пробел/спецсимвол ли это
+            // Check if it's whitespace/special character
             if (char === ' ' || char === '\n' || char === '\t' || char === '\r') {
                 result += char;
                 continue;
             }
             
             try {
-                // Инспектируем символ
+                // Inspect character
                 const inspection = this.inspector.inspect(char);
                 
                 if (inspection && inspection.layouts && inspection.layouts[targetLayout]) {
-                    // Конвертируем в целевую раскладку
+                    // Convert to target layout
                     result += inspection.layouts[targetLayout];
                 } else {
-                    // Если конвертация невозможна, оставляем как есть
+                    // If conversion not possible, keep as is
                     result += char;
                 }
             } catch (error) {
-                // В случае ошибки оставляем символ как есть
+                // In case of error, keep character as is
                 result += char;
             }
         }
@@ -156,14 +156,14 @@ class VSCodeKeymapConverter {
     }
 
     /**
-     * Определение лучшего варианта конвертации
+     * Determine the best conversion option
      */
     private getBestConversion(originalText: string, variants: Array<{layout: string, text: string}>): string {
         if (variants.length === 0) {
             return originalText;
         }
 
-        // Простая эвристика: выбираем вариант с наибольшим количеством изменений
+        // Simple heuristic: choose the variant with the most changes
         let bestVariant = variants[0];
         let maxChanges = 0;
 
@@ -179,7 +179,7 @@ class VSCodeKeymapConverter {
     }
 
     /**
-     * Подсчет различий между строками
+     * Count differences between strings
      */
     private countDifferences(str1: string, str2: string): number {
         let differences = 0;
@@ -195,7 +195,7 @@ class VSCodeKeymapConverter {
     }
 
     /**
-     * Замена текста в редакторе
+     * Replace text in editor
      */
     private async replaceText(editor: vscode.TextEditor, selection: vscode.Selection, newText: string): Promise<void> {
         await editor.edit(editBuilder => {
@@ -204,19 +204,19 @@ class VSCodeKeymapConverter {
     }
 
     /**
-     * Копирование в буфер обмена
+     * Copy to clipboard
      */
     private async copyToClipboard(text: string): Promise<void> {
         await vscode.env.clipboard.writeText(text);
     }
 
     /**
-     * Показ детальной информации о символах
+     * Show detailed character information
      */
     private async showCharacterDetails(text: string): Promise<void> {
-        const details: string[] = [`📊 Анализ текста: "${text}"\n`];
+        const details: string[] = [`📊 Text analysis: "${text}"\n`];
         
-        details.push(`Длина: ${text.length} символов\n`);
+        details.push(`Length: ${text.length} characters\n`);
         
         const convertibleChars = Array.from(text).filter(char => {
             try {
@@ -227,10 +227,10 @@ class VSCodeKeymapConverter {
             }
         });
         
-        details.push(`Конвертируемых символов: ${convertibleChars.length}\n`);
+        details.push(`Convertible characters: ${convertibleChars.length}\n`);
         details.push('─'.repeat(50) + '\n');
 
-        // Анализ каждого символа (максимум 20 символов)
+        // Analyze each character (max 20 characters)
         const charsToAnalyze = Array.from(text).slice(0, 20);
         
         charsToAnalyze.forEach((char, index) => {
@@ -238,7 +238,7 @@ class VSCodeKeymapConverter {
                 try {
                     const result = this.inspector.inspect(char);
                     if (result && result.layouts) {
-                        details.push(`Символ ${index + 1}: "${char}"`);
+                        details.push(`Character ${index + 1}: "${char}"`);
                         details.push(`  🇺🇸 EN: ${(result.layouts as any).en || '—'}`);
                         details.push(`  🇷🇺 RU: ${(result.layouts as any).ru || '—'}`);
                         details.push(`  🇮🇱 HE: ${(result.layouts as any).he || '—'}`);
@@ -246,17 +246,17 @@ class VSCodeKeymapConverter {
                         details.push('');
                     }
                 } catch (error) {
-                    details.push(`Символ ${index + 1}: "${char}" - не найден в раскладках`);
+                    details.push(`Character ${index + 1}: "${char}" - not found in layouts`);
                     details.push('');
                 }
             }
         });
 
         if (text.length > 20) {
-            details.push(`... и еще ${text.length - 20} символов`);
+            details.push(`... and ${text.length - 20} more characters`);
         }
 
-        // Создаем временный документ с результатами
+        // Create temporary document with results
         const doc = await vscode.workspace.openTextDocument({
             content: details.join('\n'),
             language: 'plaintext'
@@ -269,12 +269,12 @@ class VSCodeKeymapConverter {
     }
 
     /**
-     * Конвертация выделенного текста в конкретную раскладку (для команд)
+     * Convert selected text to specific layout (for commands)
      */
     async convertToSpecificLayout(layout: string): Promise<void> {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
-            vscode.window.showWarningMessage('Откройте файл для работы с текстом');
+            vscode.window.showWarningMessage('Open a file to work with text');
             return;
         }
 
@@ -282,7 +282,7 @@ class VSCodeKeymapConverter {
         const selectedText = editor.document.getText(selection);
 
         if (!selectedText) {
-            vscode.window.showWarningMessage('Выделите текст для конвертации');
+            vscode.window.showWarningMessage('Select text to convert');
             return;
         }
 
@@ -293,31 +293,31 @@ class VSCodeKeymapConverter {
                 await this.copyToClipboard(converted);
                 const layoutNames = this.layoutNames;
                 const layoutName = layoutNames[layout as keyof typeof layoutNames];
-                vscode.window.showInformationMessage(`✅ Конвертировано в ${layoutName}`);
+                vscode.window.showInformationMessage(`✅ Converted to ${layoutName}`);
             } else {
-                vscode.window.showInformationMessage('Текст уже в нужной раскладке');
+                vscode.window.showInformationMessage('Text is already in the target layout');
             }
         } catch (error) {
-            vscode.window.showErrorMessage(`Ошибка конвертации: ${error}`);
+            vscode.window.showErrorMessage(`Conversion error: ${error}`);
         }
     }
 }
 
 /**
- * Активация расширения
+ * Extension activation
  */
 export function activate(context: vscode.ExtensionContext) {
     console.log('🚀 Keymap Converter extension activated');
 
     const converter = new VSCodeKeymapConverter();
 
-    // Основная команда конвертации
+    // Main conversion command
     const convertCommand = vscode.commands.registerCommand(
         'keymapConverter.convertSelection',
         () => converter.convertSelectedText()
     );
 
-    // Команды для быстрой конвертации в конкретные раскладки
+    // Commands for quick conversion to specific layouts
     const convertToEnglish = vscode.commands.registerCommand(
         'keymapConverter.convertToEnglish',
         () => converter.convertToSpecificLayout('en')
@@ -333,7 +333,7 @@ export function activate(context: vscode.ExtensionContext) {
         () => converter.convertToSpecificLayout('he')
     );
 
-    // Регистрируем команды
+    // Register commands
     context.subscriptions.push(
         convertCommand,
         convertToEnglish,
@@ -341,12 +341,12 @@ export function activate(context: vscode.ExtensionContext) {
         convertToHebrew
     );
 
-    // Регистрируем провайдер для автодополнения с конвертацией
+    // Register completion provider for conversion
     const completionProvider = vscode.languages.registerCompletionItemProvider(
         '*',
         {
             provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-                // Получаем слово под курсором
+                // Get word at cursor
                 const range = document.getWordRangeAtPosition(position);
                 if (!range) {
                     return [];
@@ -357,7 +357,7 @@ export function activate(context: vscode.ExtensionContext) {
                     return [];
                 }
 
-                // Создаем предложения для конвертации
+                // Create conversion suggestions
                 const suggestions: vscode.CompletionItem[] = [];
                 const variants = converter['convertTextToAllLayouts'](word);
 
@@ -367,7 +367,7 @@ export function activate(context: vscode.ExtensionContext) {
                         vscode.CompletionItemKind.Text
                     );
                     item.detail = `Keymap: ${converter['layoutNames'][variant.layout as keyof typeof converter['layoutNames']]}`;
-                    item.documentation = `Конвертация "${word}" в ${variant.layout.toUpperCase()}`;
+                    item.documentation = `Convert "${word}" to ${variant.layout.toUpperCase()}`;
                     item.insertText = variant.text;
                     suggestions.push(item);
                 });
@@ -379,11 +379,11 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(completionProvider);
 
-    vscode.window.showInformationMessage('✅ Keymap Converter готов к работе! Используйте Ctrl+Shift+K');
+    vscode.window.showInformationMessage('✅ Keymap Converter is ready! Use Ctrl+Shift+K');
 }
 
 /**
- * Деактивация расширения
+ * Extension deactivation
  */
 export function deactivate() {
     console.log('Keymap Converter extension deactivated');

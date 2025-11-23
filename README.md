@@ -125,7 +125,7 @@ shalom → שהךםם
 ### Supported Layouts
 - 🇺🇸 **English (EN)** - QWERTY
 - 🇷🇺 **Russian (RU)** - ЙЦУКЕН
-- 🇮🇱 **Hebrew (HE)** - עברית
+- 🇮🇱 **Hebrew (HE)** - /'קראט'
 
 ### Architecture
 - **Web version**: Vanilla JavaScript + keymap-inspector (fallback)

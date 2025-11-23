@@ -1,7 +1,7 @@
 {
   "name": "keymap-converter",
   "displayName": "Keymap Converter",
-  "version": "2.0.3",
+  "version": "2.0.5",
   "description": "Конвертация текста между раскладками клавиатуры (русская, английская, иврит). Convert text between keyboard layouts (Russian, English, Hebrew)",
   "publisher": "MooseBro",
   "icon": "./browser-extension/icons/icon128.png",
@@ -29,6 +29,9 @@
   ],
   "author": "Michael David Vizenovsky",
   "license": "MIT",
+  "sponsor": {
+    "url": "https://buymeacoffee.com/moosebro"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/MikyViz/keymapConverter"

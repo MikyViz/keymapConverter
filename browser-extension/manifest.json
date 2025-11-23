@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Keymap Converter",
   "version": "2.0.0",
-  "description": "Конвертация текста между раскладками клавиатуры (русская, английская, иврит). Работает везде: Google, Gmail, GitHub и др.",
+  "description": "Text layout converter for browser extension. Convert selected text between different keyboard layouts (English, Russian, Hebrew).",
   
   "permissions": [
     "activeTab",
@@ -27,7 +27,7 @@
   ],
   
   "action": {
-    "default_title": "Keymap Converter - Конвертировать выделенный текст",
+    "default_title": "Keymap Converter - Convert text between keyboard layouts",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png", 
@@ -48,13 +48,13 @@
       "suggested_key": {
         "default": "Ctrl+Shift+K"
       },
-      "description": "Конвертировать выделенный текст (автоматически)"
+      "description": "Convert layout automatically"
     },
     "convert-english": {
       "suggested_key": {
         "default": "Ctrl+Shift+E"
       },
-      "description": "Конвертировать в английскую раскладку"
+      "description": "Convert to English layout"
     },
     "convert-russian": {
       "suggested_key": {
@@ -66,7 +66,7 @@
       "suggested_key": {
         "default": "Ctrl+Shift+H"
       },
-      "description": "Конвертировать в ивритскую раскладку"
+      "description": "להמיר לעברית"
     }
   },
   
