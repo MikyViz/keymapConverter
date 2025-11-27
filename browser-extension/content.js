@@ -190,7 +190,7 @@ class BrowserKeymapConverter {
         const button = document.createElement('div');
         button.id = 'keymap-converter-float-btn';
         button.innerHTML = '🌐';
-        button.title = 'Конвертировать текст (Ctrl+Shift+K)';
+        button.title = 'Convert text (Ctrl+Shift+K)';
         
         Object.assign(button.style, {
             position: 'fixed',
@@ -264,12 +264,11 @@ class BrowserKeymapConverter {
         }
         
         if (!selectedText || !selectedText.trim()) {
-            this.showNotification('⚠️ Выделите текст для конвертации', 'warning');
+            this.showNotification('⚠️ Select text to convert', 'warning');
             return;
         }
 
-        console.log('🔄 Конвертация:', selectedText, 'в', layout);
-
+        console.log('🔄 Conversion:', selectedText, 'to', layout);
         if (layout === 'auto') {
             this.showConvertMenu(selectedText);
             return;
@@ -280,12 +279,12 @@ class BrowserKeymapConverter {
             if (converted !== selectedText) {
                 this.replaceSelectedText(converted);
                 this.copyToClipboard(converted);
-                this.showNotification(`✅ Конвертировано в ${this.getLayoutName(layout)}`, 'success');
+                this.showNotification(`✅ Converted to ${this.getLayoutName(layout)}`, 'success');
             } else {
-                this.showNotification('ℹ️ Текст уже в нужной раскладке', 'info');
+                this.showNotification('ℹ️ Text is already in the desired layout', 'info');
             }
         } catch (error) {
-            this.showNotification('❌ Ошибка конвертации: ' + error.message, 'error');
+            this.showNotification('❌ Conversion error: ' + error.message, 'error');
         }
     }
 
@@ -319,20 +318,20 @@ class BrowserKeymapConverter {
         const preview = text.length > 60 ? text.substring(0, 60) + '...' : text;
         
         menu.innerHTML = `
-            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px;">🌐 Конвертировать текст</h3>
+            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px;">🌐 Convert text</h3>
             <div style="background: #f5f5f5; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-family: monospace; font-size: 14px; max-height: 100px; overflow-y: auto;">
                 "${preview}"
             </div>
             <div id="convert-variants" style="margin: 15px 0;"></div>
             <div style="margin-top: 15px; text-align: right;">
-                <button id="close-menu" style="background: #e0e0e0; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;">Закрыть</button>
+                <button id="close-menu" style="background: #e0e0e0; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;">Close</button>
             </div>
         `;
 
         const variantsContainer = menu.querySelector('#convert-variants');
         
         if (variants.length === 0) {
-            variantsContainer.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Текст не требует конвертации</p>';
+            variantsContainer.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No conversion needed</p>';
         } else {
             variants.forEach(variant => {
                 const button = document.createElement('button');
@@ -375,7 +374,7 @@ class BrowserKeymapConverter {
                 button.addEventListener('click', () => {
                     this.replaceSelectedText(variant.text);
                     this.copyToClipboard(variant.text);
-                    this.showNotification(`✅ Конвертировано в ${this.getLayoutName(variant.layout)}`, 'success');
+                    this.showNotification(`✅ Converted to ${this.getLayoutName(variant.layout)}`, 'success');
                     menu.remove();
                 });
                 
@@ -408,7 +407,7 @@ class BrowserKeymapConverter {
 
     convertTextToAllLayouts(text) {
         if (!this.inspector) {
-            console.error('❌ Inspector не инициализирован');
+            console.error('❌ Inspector not initialized');
             return [];
         }
         
@@ -422,7 +421,7 @@ class BrowserKeymapConverter {
                     results.push({ layout: targetLayout, text: converted });
                 }
             } catch (error) {
-                console.warn(`Ошибка конвертации в ${targetLayout}:`, error);
+                console.warn(`Conversion error in ${targetLayout}:`, error);
             }
         });
 
@@ -431,7 +430,7 @@ class BrowserKeymapConverter {
 
     convertToLayout(text, targetLayout) {
         if (!this.inspector) {
-            throw new Error('Inspector не инициализирован');
+            throw new Error('Inspector not initialized');
         }
         
         // Конвертируем каждый символ используя keymap-inspector
@@ -527,7 +526,7 @@ class BrowserKeymapConverter {
                 console.warn('⚠️ Не удалось заменить текст:', error);
                 // Копируем в буфер обмена как последний fallback
                 this.copyToClipboard(newText);
-                this.showNotification('📋 Текст скопирован в буфер обмена. Вставьте вручную (Ctrl+V)', 'info');
+                this.showNotification('📋 Text copied to clipboard. Please paste manually (Ctrl+V)', 'info');
             }
         }
     }

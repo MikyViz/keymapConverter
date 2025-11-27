@@ -135,12 +135,12 @@ class KeymapConverterApp {
             this.displayCharacterDetails(text);
             
             if (isSelection) {
-                this.showNotification(`Конвертировано ${text.length} символов`, 'success');
+                this.showNotification(`Converted ${text.length} characters`, 'success');
             }
             
         } catch (error) {
-            console.error('Ошибка обработки текста:', error);
-            this.showNotification('Ошибка конвертации: ' + error.message, 'error');
+            console.error('Error processing text:', error);
+            this.showNotification('Conversion error: ' + error.message, 'error');
         }
     }
 
@@ -165,7 +165,7 @@ class KeymapConverterApp {
                     results.variants[layout] = converted;
                 }
             } catch (error) {
-                console.warn(`Ошибка конвертации в ${layout}:`, error);
+                console.warn(`Conversion error in ${layout}:`, error);
             }
         });
 
@@ -189,8 +189,8 @@ class KeymapConverterApp {
         if (Object.keys(results.variants).length === 0) {
             this.outputVariants.innerHTML = `
                 <div class="variant-card">
-                    <div class="variant-title">ℹ️ Информация</div>
-                    <div class="variant-text">Текст не требует конвертации или содержит символы, не поддерживаемые раскладками.</div>
+                    <div class="variant-title">ℹ️ Information</div>
+                    <div class="variant-text">The text does not require conversion or contains characters not supported by the layouts.</div>
                 </div>
             `;
             return;
@@ -228,9 +228,9 @@ class KeymapConverterApp {
             // Для длинных текстов показываем только статистику
             this.detailsOutput.innerHTML = `
                 <div class="char-info">
-                    <div>📊 Статистика текста:</div>
-                    <div>Символов: ${text.length}</div>
-                    <div>Конвертируемых символов: ${this.getConvertibleCount(text)}</div>
+                    <div>📊 Text statistics:</div>
+                    <div>Characters: ${text.length}</div>
+                    <div>Convertible characters: ${this.getConvertibleCount(text)}</div>
                 </div>
             `;
         } else {
@@ -244,7 +244,7 @@ class KeymapConverterApp {
                         const charDiv = document.createElement('div');
                         charDiv.className = 'char-info';
                         charDiv.innerHTML = `
-                            <div class="char-original">Символ: "${char}"</div>
+                            <div class="char-original">Character: "${char}"</div>
                             <div class="char-layouts">
                                 <div class="layout-variant">🇺🇸 EN: ${result.layouts.en || '—'}</div>
                                 <div class="layout-variant">🇷🇺 RU: ${result.layouts.ru || '—'}</div>
@@ -288,7 +288,7 @@ class KeymapConverterApp {
     async copyToClipboard(text, layoutName) {
         try {
             await navigator.clipboard.writeText(text);
-            this.showNotification(`📋 Скопировано в буфер: ${layoutName}`, 'success');
+            this.showNotification(`📋 Copied to clipboard: ${layoutName}`, 'success');
         } catch (error) {
             // Fallback для старых браузеров
             const textArea = document.createElement('textarea');
@@ -298,7 +298,7 @@ class KeymapConverterApp {
             document.execCommand('copy');
             document.body.removeChild(textArea);
             
-            this.showNotification(`📋 Скопировано в буфер: ${layoutName}`, 'success');
+            this.showNotification(`📋 Copied to clipboard: ${layoutName}`, 'success');
         }
     }
 
@@ -312,8 +312,8 @@ class KeymapConverterApp {
             this.selectionInfo.style.borderColor = '#4caf50';
         } else {
             const defaultMessage = this.autoConvert 
-                ? '💡 Выделите текст для автоматической конвертации'
-                : '💡 Автоконвертация отключена. Введите текст и используйте кнопки раскладок.';
+                ? '💡 Select text for automatic conversion'
+                : '💡 Auto-conversion is off. Enter text and use the layout buttons.';
             this.selectionInfo.textContent = defaultMessage;
             this.selectionInfo.style.background = '#e3f2fd';
             this.selectionInfo.style.borderColor = '#2196f3';

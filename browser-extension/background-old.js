@@ -8,13 +8,13 @@ chrome.runtime.onInstalled.addListener(() => {
     // Создаем контекстное меню для выделенного текста
     chrome.contextMenus.create({
         id: 'keymap-convert-selection',
-        title: 'Конвертировать выделенный текст',
+        title: 'Convert Selected Text',
         contexts: ['selection']
     });
 
     chrome.contextMenus.create({
         id: 'keymap-convert-to-en',
-        title: '🇺🇸 В английскую раскладку',
+        title: '🇺🇸 English keyboard',
         contexts: ['selection'],
         parentId: 'keymap-convert-selection'
     });
@@ -28,7 +28,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
     chrome.contextMenus.create({
         id: 'keymap-convert-to-he',
-        title: '🇮🇱 В ивритскую раскладку',
+        title: '🇮🇱 מקלדת עברית',
         contexts: ['selection'],
         parentId: 'keymap-convert-selection'
     });

@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/MikyViz/keymapConverter#readme",
   "dependencies": {
-    "keymap-inspector": "^0.2.0"
+    "keymap-inspector": "^0.2.2"
   },
   "devDependencies": {
     "@types/node": "^18.19.122",

@@ -75,7 +75,7 @@ class SimpleKeymapConverter {
         button.id = 'keymap-converter-float-btn';
         button.className = 'keymap-converter-button';
         button.innerHTML = '🌐';
-        button.title = 'Конвертировать текст (Ctrl+Shift+K)';
+        button.title = 'Convert text (Ctrl+Shift+K)';
         
         // Стили для кнопки
         Object.assign(button.style, {
@@ -128,12 +128,11 @@ class SimpleKeymapConverter {
     showConvertMenu() {
         const selectedText = window.getSelection().toString().trim();
         if (!selectedText) {
-            this.showNotification('⚠️ Выделите текст для конвертации', 'warning');
+            this.showNotification('⚠️ Select text to convert', 'warning');
             return;
         }
 
-        console.log('🔄 Показываем меню конвертации для:', selectedText);
-
+        console.log('🔄 Showing convert menu for:', selectedText);
         // Создаем простое меню
         const menu = document.createElement('div');
         menu.id = 'keymap-converter-menu';
@@ -157,14 +156,14 @@ class SimpleKeymapConverter {
         const variants = this.convertText(selectedText);
         
         let menuHTML = `
-            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px;">🌐 Конвертировать текст</h3>
+            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px;">🌐 Convert text</h3>
             <div style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-family: monospace; word-break: break-all;">
                 "${selectedText.length > 50 ? selectedText.substring(0, 50) + '...' : selectedText}"
             </div>
         `;
 
         if (variants.length === 0) {
-            menuHTML += '<p style="color: #666; margin: 10px 0;">Конвертация не требуется</p>';
+            menuHTML += '<p style="color: #666; margin: 10px 0;">No conversion needed</p>';
         } else {
             variants.forEach(variant => {
                 menuHTML += `
@@ -190,7 +189,7 @@ class SimpleKeymapConverter {
 
         menuHTML += `
             <div style="margin-top: 15px; text-align: right;">
-                <button id="close-menu" style="background: #ccc; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">Закрыть</button>
+                <button id="close-menu" style="background: #ccc; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">Close</button>
             </div>
         `;
 
@@ -270,12 +269,11 @@ class SimpleKeymapConverter {
     async convertSelectedText(targetLayout = 'auto') {
         const selectedText = window.getSelection().toString().trim();
         if (!selectedText) {
-            this.showNotification('⚠️ Выделите текст для конвертации', 'warning');
+            this.showNotification('⚠️ Select text to convert', 'warning');
             return;
         }
 
-        console.log('🔄 Конвертируем:', selectedText, 'в раскладку:', targetLayout);
-
+        console.log('🔄 Converting:', selectedText, 'to layout:', targetLayout);
         if (targetLayout === 'auto') {
             this.showConvertMenu();
             return;
@@ -285,13 +283,13 @@ class SimpleKeymapConverter {
             const converted = this.convertToLayout(selectedText, targetLayout);
             if (converted !== selectedText) {
                 await this.replaceSelectedText(converted);
-                this.showNotification(`✅ Конвертировано в ${this.getLayoutName(targetLayout)}`, 'success');
+                this.showNotification(`✅ Converted to ${this.getLayoutName(targetLayout)}`, 'success');
             } else {
-                this.showNotification('ℹ️ Текст уже в нужной раскладке', 'info');
+                this.showNotification('ℹ️ Text is already in the desired layout', 'info');
             }
         } catch (error) {
-            console.error('❌ Ошибка конвертации:', error);
-            this.showNotification('❌ Ошибка конвертации: ' + error.message, 'error');
+            console.error('❌ Conversion error:', error);
+            this.showNotification('❌ Conversion error: ' + error.message, 'error');
         }
     }
 
@@ -325,12 +323,12 @@ class SimpleKeymapConverter {
                     
                     console.log('✅ Текст заменен в редактируемом элементе');
                 } else {
-                    console.log('ℹ️ Элемент не редактируется, текст только скопирован');
-                    this.showNotification('📋 Текст скопирован в буфер обмена', 'info');
+                    console.log('ℹ️ Element is not editable, text only copied');
+                    this.showNotification('📋 Text copied to clipboard', 'info');
                 }
             } catch (error) {
-                console.warn('⚠️ Ошибка замены текста:', error);
-                this.showNotification('📋 Текст скопирован в буфер обмена', 'info');
+                console.warn('⚠️ Text replacement error:', error);
+                this.showNotification('📋 Text copied to clipboard', 'info');
             }
         }
     }

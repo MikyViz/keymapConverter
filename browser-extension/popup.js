@@ -67,7 +67,7 @@ class PopupKeymapConverter {
         const outputVariants = document.getElementById('outputVariants');
         
         if (!text.trim()) {
-            outputVariants.innerHTML = '<div class="empty-state">Введите текст для конвертации</div>';
+            outputVariants.innerHTML = '<div class="empty-state">Enter text to convert</div>';
             return;
         }
 
@@ -130,7 +130,7 @@ class PopupKeymapConverter {
         const outputVariants = document.getElementById('outputVariants');
         
         if (variants.length === 0) {
-            outputVariants.innerHTML = '<div class="empty-state">Текст не требует конвертации</div>';
+            outputVariants.innerHTML = '<div class="empty-state">No conversion needed</div>';
             return;
         }
 

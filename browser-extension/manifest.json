@@ -3,6 +3,8 @@
   "name": "Keymap Converter",
   "version": "2.0.0",
   "description": "Text layout converter for browser extension. Convert selected text between different keyboard layouts (English, Russian, Hebrew).",
+  "author": "Michael David Vizenovsky",
+  "homepage_url": "https://github.com/MikyViz/keymapConverter",
   
   "permissions": [
     "activeTab",
