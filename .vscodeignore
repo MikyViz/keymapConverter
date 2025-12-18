@@ -15,6 +15,7 @@ npm-debug.log*
 
 # Exclude browser extension files
 browser-extension/**
+!browser-extension/icons/**
 keymap-converter-extension.zip
 
 # Exclude web application files
