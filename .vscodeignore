@@ -1,5 +1,6 @@
 .vscode/**
 .vscode-test/**
+.github/**
 src/**
 .gitignore
 .yarnrc
@@ -11,3 +12,23 @@ vsc-extension-quickstart.md
 node_modules/**
 !node_modules/keymap-inspector/**
 npm-debug.log*
+
+# Exclude browser extension files
+browser-extension/**
+keymap-converter-extension.zip
+
+# Exclude web application files
+index.html
+demo.html
+quick-test.html
+test-*.html
+app.js
+simple-keymap.js
+styles.css
+create-icons.js
+*.mp4
+*.mov
+*.avi
+
+# Exclude documentation
+LEARNING-GUIDE.md
