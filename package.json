@@ -1,7 +1,7 @@
 {
   "name": "keymap-converter",
   "displayName": "Keymap Converter",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "Конвертация текста между раскладками клавиатуры (русская, английская, иврит). Convert text between keyboard layouts (Russian, English, Hebrew)",
   "publisher": "MooseBro",
   "icon": "./browser-extension/icons/icon128.png",
@@ -79,6 +79,26 @@
         "command": "keymapConverter.convertToHebrew",
         "title": "Convert to Hebrew Layout",
         "category": "Keymap Converter"
+      },
+      {
+        "command": "keymapConverter.convertFromClipboard",
+        "title": "Convert Clipboard Text (works anywhere)",
+        "category": "Keymap Converter"
+      },
+      {
+        "command": "keymapConverter.convertClipboardToEnglish",
+        "title": "Convert Clipboard to English",
+        "category": "Keymap Converter"
+      },
+      {
+        "command": "keymapConverter.convertClipboardToRussian",
+        "title": "Convert Clipboard to Russian",
+        "category": "Keymap Converter"
+      },
+      {
+        "command": "keymapConverter.convertClipboardToHebrew",
+        "title": "Convert Clipboard to Hebrew",
+        "category": "Keymap Converter"
       }
     ],
     "keybindings": [
@@ -101,6 +121,23 @@
         "command": "keymapConverter.convertToHebrew",
         "key": "ctrl+shift+h",
         "when": "editorHasSelection || inputFocus"
+      },
+      {
+        "command": "keymapConverter.convertFromClipboard",
+        "key": "ctrl+alt+k",
+        "when": "!editorFocus"
+      },
+      {
+        "command": "keymapConverter.convertClipboardToEnglish",
+        "key": "ctrl+alt+e"
+      },
+      {
+        "command": "keymapConverter.convertClipboardToRussian",
+        "key": "ctrl+alt+r"
+      },
+      {
+        "command": "keymapConverter.convertClipboardToHebrew",
+        "key": "ctrl+alt+h"
       }
     ],
     "menus": {

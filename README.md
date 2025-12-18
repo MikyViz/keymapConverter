@@ -96,10 +96,11 @@ shalom → שהךםם
 - ✅ Responsive design
 
 ### 🔧 VS Code Extension
-- ✅ Works in editor and GitHub Copilot Chat
+- ✅ **In code editor:** Select text → `Ctrl+Shift+K` (text replaced automatically)
+- ✅ **In chats/terminal:** Select text → Copy (`Ctrl+C`) → `Ctrl+Shift+K` → Paste (`Ctrl+V`)
+- ✅ Works in GitHub Copilot Chat, terminal, search, and any VS Code UI
 - ✅ Quick Pick for conversion variant selection
-- ✅ Automatic clipboard copy
-- ✅ Replace selected text
+- ✅ Automatic clipboard operations
 - ✅ Detailed analysis in separate document
 - ✅ Editor context menu
 

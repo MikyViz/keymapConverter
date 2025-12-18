@@ -21,19 +21,38 @@ class VSCodeKeymapConverter {
 
     /**
      * Show Quick Pick for layout selection and conversion
+     * Works with editor selection OR clipboard
      */
     async convertSelectedText(): Promise<void> {
         const editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            vscode.window.showWarningMessage('Open a file to work with text');
-            return;
+        let selectedText = '';
+        let isEditorMode = false;
+        let selection: vscode.Selection | undefined;
+
+        // Try to get text from editor first
+        if (editor && !editor.selection.isEmpty) {
+            selection = editor.selection;
+            selectedText = editor.document.getText(selection);
+            isEditorMode = true;
         }
 
-        const selection = editor.selection;
-        const selectedText = editor.document.getText(selection);
-
+        // If no selection in editor, try clipboard
         if (!selectedText) {
-            vscode.window.showWarningMessage('Select text to convert');
+            try {
+                selectedText = await vscode.env.clipboard.readText();
+                isEditorMode = false;
+            } catch (error) {
+                // Ignore clipboard errors
+            }
+        }
+
+        if (!selectedText || !selectedText.trim()) {
+            // Show helpful message based on context
+            if (editor) {
+                vscode.window.showWarningMessage('💡 Select text to convert (in editor or copy to clipboard first with Ctrl+C)');
+            } else {
+                vscode.window.showInformationMessage('💡 To convert text: 1) Select text 2) Copy (Ctrl+C) 3) Run this command again', 'Got it');
+            }
             return;
         }
 
@@ -48,6 +67,7 @@ class VSCodeKeymapConverter {
 
             // Create variants for Quick Pick
             const layoutNames = this.layoutNames;
+            const modeLabel = isEditorMode ? '📝 Editor' : '📋 Clipboard';
             const quickPickItems: vscode.QuickPickItem[] = [
                 {
                     label: '🎯 Auto-detect',
@@ -67,7 +87,7 @@ class VSCodeKeymapConverter {
             ];
 
             const selected = await vscode.window.showQuickPick(quickPickItems, {
-                placeHolder: `Convert "${selectedText.length > 30 ? selectedText.substring(0, 30) + '...' : selectedText}"`,
+                placeHolder: `${modeLabel} Convert "${selectedText.length > 30 ? selectedText.substring(0, 30) + '...' : selectedText}"`,
                 title: 'Keymap Converter'
             });
 
@@ -79,18 +99,27 @@ class VSCodeKeymapConverter {
                 await this.showCharacterDetails(selectedText);
             } else if (selected.label === '🎯 Auto-detect') {
                 const bestConversion = this.getBestConversion(selectedText, variants);
-                await this.replaceText(editor, selection, bestConversion);
-                await this.copyToClipboard(bestConversion);
-                vscode.window.showInformationMessage(`✅ Text converted and copied to clipboard`);
+                
+                if (isEditorMode && editor && selection) {
+                    await this.replaceText(editor, selection, bestConversion);
+                    vscode.window.showInformationMessage(`✅ Text converted in editor`);
+                } else {
+                    await this.copyToClipboard(bestConversion);
+                    vscode.window.showInformationMessage(`✅ Converted and copied to clipboard (paste with Ctrl+V)`);
+                }
             } else {
                 // Find the matching variant
                 const variant = variants.find(v => 
                     layoutNames[v.layout as keyof typeof layoutNames] === selected.label
                 );
                 if (variant) {
-                    await this.replaceText(editor, selection, variant.text);
-                    await this.copyToClipboard(variant.text);
-                    vscode.window.showInformationMessage(`✅ Converted to ${selected.label}`);
+                    if (isEditorMode && editor && selection) {
+                        await this.replaceText(editor, selection, variant.text);
+                        vscode.window.showInformationMessage(`✅ Converted to ${selected.label}`);
+                    } else {
+                        await this.copyToClipboard(variant.text);
+                        vscode.window.showInformationMessage(`✅ Converted to ${selected.label} (paste with Ctrl+V)`);
+                    }
                 }
             }
 
@@ -270,30 +299,144 @@ class VSCodeKeymapConverter {
 
     /**
      * Convert selected text to specific layout (for commands)
+     * Works with editor selection OR clipboard
      */
     async convertToSpecificLayout(layout: string): Promise<void> {
         const editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            vscode.window.showWarningMessage('Open a file to work with text');
-            return;
+        let selectedText = '';
+        let isEditorMode = false;
+        let selection: vscode.Selection | undefined;
+
+        // Try to get text from editor first
+        if (editor && !editor.selection.isEmpty) {
+            selection = editor.selection;
+            selectedText = editor.document.getText(selection);
+            isEditorMode = true;
         }
 
-        const selection = editor.selection;
-        const selectedText = editor.document.getText(selection);
-
+        // If no selection in editor, try clipboard
         if (!selectedText) {
-            vscode.window.showWarningMessage('Select text to convert');
+            try {
+                selectedText = await vscode.env.clipboard.readText();
+                isEditorMode = false;
+            } catch (error) {
+                // Ignore clipboard errors
+            }
+        }
+
+        if (!selectedText || !selectedText.trim()) {
+            if (editor) {
+                vscode.window.showWarningMessage('💡 Select text to convert (in editor or copy to clipboard first with Ctrl+C)');
+            } else {
+                vscode.window.showInformationMessage('💡 To convert text: 1) Select text 2) Copy (Ctrl+C) 3) Run this command again', 'Got it');
+            }
             return;
         }
 
         try {
             const converted = this.convertToLayout(selectedText, layout);
             if (converted !== selectedText) {
-                await this.replaceText(editor, selection, converted);
+                const layoutNames = this.layoutNames;
+                const layoutName = layoutNames[layout as keyof typeof layoutNames];
+                
+                if (isEditorMode && editor && selection) {
+                    await this.replaceText(editor, selection, converted);
+                    vscode.window.showInformationMessage(`✅ Converted to ${layoutName}`);
+                } else {
+                    await this.copyToClipboard(converted);
+                    vscode.window.showInformationMessage(`✅ Converted to ${layoutName} → Now paste with Ctrl+V`);
+                }
+            } else {
+                vscode.window.showInformationMessage('Text is already in the target layout');
+            }
+        } catch (error) {
+            vscode.window.showErrorMessage(`Conversion error: ${error}`);
+        }
+    }
+
+    /**
+     * Convert text from clipboard (works anywhere in VS Code)
+     */
+    async convertFromClipboard(): Promise<void> {
+        try {
+            // Read from clipboard
+            const clipboardText = await vscode.env.clipboard.readText();
+            
+            if (!clipboardText || !clipboardText.trim()) {
+                vscode.window.showWarningMessage('Clipboard is empty');
+                return;
+            }
+
+            // Convert to all available layouts
+            const variants = this.convertTextToAllLayouts(clipboardText);
+            
+            if (variants.length === 0) {
+                vscode.window.showInformationMessage('Text does not require conversion');
+                return;
+            }
+
+            // Create variants for Quick Pick
+            const layoutNames = this.layoutNames;
+            const quickPickItems: vscode.QuickPickItem[] = [
+                {
+                    label: '🎯 Auto-detect',
+                    description: 'Choose the best option automatically',
+                    detail: this.getBestConversion(clipboardText, variants)
+                },
+                ...variants.map(variant => ({
+                    label: layoutNames[variant.layout as keyof typeof layoutNames],
+                    description: variant.layout.toUpperCase(),
+                    detail: variant.text
+                }))
+            ];
+
+            const selected = await vscode.window.showQuickPick(quickPickItems, {
+                placeHolder: `Convert clipboard: "${clipboardText.length > 30 ? clipboardText.substring(0, 30) + '...' : clipboardText}"`,
+                title: 'Keymap Converter - Clipboard Mode'
+            });
+
+            if (!selected) {
+                return;
+            }
+
+            if (selected.label === '🎯 Auto-detect') {
+                const bestConversion = this.getBestConversion(clipboardText, variants);
+                await this.copyToClipboard(bestConversion);
+                vscode.window.showInformationMessage(`✅ Converted and copied back to clipboard`);
+            } else {
+                // Find the matching variant
+                const variant = variants.find(v => 
+                    layoutNames[v.layout as keyof typeof layoutNames] === selected.label
+                );
+                if (variant) {
+                    await this.copyToClipboard(variant.text);
+                    vscode.window.showInformationMessage(`✅ Converted to ${selected.label} and copied to clipboard`);
+                }
+            }
+
+        } catch (error) {
+            vscode.window.showErrorMessage(`Conversion error: ${error}`);
+        }
+    }
+
+    /**
+     * Convert clipboard to specific layout
+     */
+    async convertClipboardToLayout(layout: string): Promise<void> {
+        try {
+            const clipboardText = await vscode.env.clipboard.readText();
+            
+            if (!clipboardText || !clipboardText.trim()) {
+                vscode.window.showWarningMessage('Clipboard is empty');
+                return;
+            }
+
+            const converted = this.convertToLayout(clipboardText, layout);
+            if (converted !== clipboardText) {
                 await this.copyToClipboard(converted);
                 const layoutNames = this.layoutNames;
                 const layoutName = layoutNames[layout as keyof typeof layoutNames];
-                vscode.window.showInformationMessage(`✅ Converted to ${layoutName}`);
+                vscode.window.showInformationMessage(`✅ Clipboard converted to ${layoutName}`);
             } else {
                 vscode.window.showInformationMessage('Text is already in the target layout');
             }
@@ -333,12 +476,37 @@ export function activate(context: vscode.ExtensionContext) {
         () => converter.convertToSpecificLayout('he')
     );
 
+    // Clipboard conversion commands (work anywhere in VS Code)
+    const convertFromClipboard = vscode.commands.registerCommand(
+        'keymapConverter.convertFromClipboard',
+        () => converter.convertFromClipboard()
+    );
+
+    const convertClipboardToEnglish = vscode.commands.registerCommand(
+        'keymapConverter.convertClipboardToEnglish',
+        () => converter.convertClipboardToLayout('en')
+    );
+
+    const convertClipboardToRussian = vscode.commands.registerCommand(
+        'keymapConverter.convertClipboardToRussian',
+        () => converter.convertClipboardToLayout('ru')
+    );
+
+    const convertClipboardToHebrew = vscode.commands.registerCommand(
+        'keymapConverter.convertClipboardToHebrew',
+        () => converter.convertClipboardToLayout('he')
+    );
+
     // Register commands
     context.subscriptions.push(
         convertCommand,
         convertToEnglish,
         convertToRussian,
-        convertToHebrew
+        convertToHebrew,
+        convertFromClipboard,
+        convertClipboardToEnglish,
+        convertClipboardToRussian,
+        convertClipboardToHebrew
     );
 
     // Register completion provider for conversion
