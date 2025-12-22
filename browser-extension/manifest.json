@@ -7,15 +7,8 @@
   "homepage_url": "https://github.com/MikyViz/keymapConverter",
   
   "permissions": [
-    "activeTab",
     "contextMenus",
-    "scripting",
     "storage"
-  ],
-  
-  "host_permissions": [
-    "http://*/*",
-    "https://*/*"
   ],
   
   "background": {

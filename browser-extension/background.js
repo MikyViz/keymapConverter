@@ -131,33 +131,9 @@ async function sendConversionMessage(tabId, layout) {
         });
         console.log('✅ Команда отправлена в content script');
     } catch (error) {
-        console.log('⚠️ Content script не найден, инжектим...');
-        
-        try {
-            // Инжектим content script
-            await chrome.scripting.executeScript({
-                target: { tabId: tabId },
-                files: ['content.js']
-            });
-            
-            console.log('✅ Content script заинжекчен');
-            
-            // Ждем немного и пробуем снова
-            setTimeout(async () => {
-                try {
-                    await chrome.tabs.sendMessage(tabId, {
-                        action: 'convertSelection',
-                        layout: layout
-                    });
-                    console.log('✅ Команда отправлена после инжекции');
-                } catch (e) {
-                    console.error('❌ Не удалось отправить команду:', e);
-                }
-            }, 200);
-            
-        } catch (injectionError) {
-            console.error('❌ Ошибка инжекции:', injectionError);
-        }
+        console.error('❌ Content script не доступен на этой странице:', error.message);
+        // Content script автоматически инжектится через manifest.json
+        // Если он не доступен, значит страница не поддерживается (например chrome:// страницы)
     }
 }
 
