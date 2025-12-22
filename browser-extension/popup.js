@@ -14,7 +14,18 @@ class PopupKeymapConverter {
 
     async init() {
         await this.loadKeymapInspector();
+        await this.loadSettings();
         this.setupEventListeners();
+    }
+
+    async loadSettings() {
+        try {
+            const result = await chrome.storage.sync.get(['showFloatingButton']);
+            const showButton = result.showFloatingButton !== undefined ? result.showFloatingButton : true;
+            document.getElementById('showFloatingButton').checked = showButton;
+        } catch (e) {
+            console.error('Ошибка загрузки настроек:', e);
+        }
     }
 
     async loadKeymapInspector() {
@@ -50,6 +61,31 @@ class PopupKeymapConverter {
                 this.selectLayout(e.target.dataset.layout);
                 this.processText(inputText.value);
             });
+        });
+        
+        // Настройка плавающей кнопки
+        const showFloatingButton = document.getElementById('showFloatingButton');
+        showFloatingButton.addEventListener('change', async (e) => {
+            try {
+                console.log('⚙️ Изменение настройки showFloatingButton:', e.target.checked);
+                await chrome.storage.sync.set({ showFloatingButton: e.target.checked });
+                console.log('⚙️ Настройка сохранена в storage');
+                
+                // Уведомляем все вкладки об изменении
+                const tabs = await chrome.tabs.query({});
+                console.log('⚙️ Отправка обновления на', tabs.length, 'вкладок');
+                
+                tabs.forEach(tab => {
+                    chrome.tabs.sendMessage(tab.id, {
+                        action: 'updateSettings',
+                        showFloatingButton: e.target.checked
+                    }).catch(() => {}); // Игнорируем ошибки для вкладок без content script
+                });
+                this.showNotification('✅ Настройки сохранены');
+            } catch (e) {
+                console.error('Ошибка сохранения настроек:', e);
+                this.showNotification('❌ Ошибка сохранения', 'error');
+            }
         });
     }
 

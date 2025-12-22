@@ -122,12 +122,6 @@ chrome.commands.onCommand.addListener(async (command) => {
     }
 });
 
-// Обработка клика по иконке расширения
-chrome.action.onClicked.addListener(async (tab) => {
-    console.log('🖱️ Клик по иконке расширения');
-    sendConversionMessage(tab.id, 'auto');
-});
-
 // Универсальная функция отправки сообщения
 async function sendConversionMessage(tabId, layout) {
     try {

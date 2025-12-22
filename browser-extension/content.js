@@ -8,22 +8,61 @@ class BrowserKeymapConverter {
         this.version = '2.0.0';
         this.inspector = null;
         this.currentSelection = null;
+        this.showFloatingButton = true; // настройка по умолчанию
         this.init();
     }
     
     async init() {
         try {
+            // Загружаем настройки
+            await this.loadSettings();
             // Загружаем keymap-inspector из скрипта
             await this.loadKeymapInspector();
             this.setupEventListeners();
             this.createFloatingButton();
             this.setupKeyboardShortcuts();
+            this.setupMessageListener();
             console.log('🚀 Keymap Converter v' + this.version + ' загружен и готов!');
             console.log('✅ Используется keymap-inspector v0.1.5');
             console.log('✅ Поддержка: INPUT, TEXTAREA, ContentEditable, обычный текст');
         } catch (error) {
             console.error('❌ Ошибка инициализации:', error);
         }
+    }
+    
+    async loadSettings() {
+        try {
+            const result = await chrome.storage.sync.get(['showFloatingButton']);
+            this.showFloatingButton = result.showFloatingButton !== undefined ? result.showFloatingButton : true;
+            console.log('⚙️ Загружена настройка showFloatingButton:', this.showFloatingButton);
+            console.log('⚙️ Рав результат из storage:', result);
+            
+            // Если кнопка выключена, убедимся что она скрыта
+            if (!this.showFloatingButton) {
+                setTimeout(() => this.hideConvertButton(), 100);
+            }
+        } catch (e) {
+            console.error('Ошибка загрузки настроек:', e);
+            this.showFloatingButton = true;
+        }
+    }
+    
+    setupMessageListener() {
+        // Слушаем сообщения об изменении настроек
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.action === 'updateSettings') {
+                console.log('⚙️ Получено обновление настроек:', message.showFloatingButton);
+                this.showFloatingButton = message.showFloatingButton;
+                console.log('⚙️ Новое значение showFloatingButton:', this.showFloatingButton);
+                // Скрываем кнопку, если нужно
+                if (!this.showFloatingButton) {
+                    this.hideConvertButton();
+                    console.log('⚙️ Кнопка скрыта');
+                } else {
+                    console.log('⚙️ Кнопка включена');
+                }
+            }
+        });
     }
     
     async loadKeymapInspector() {
@@ -146,7 +185,9 @@ class BrowserKeymapConverter {
                 }
                 
                 if (hasSelection) {
-                    this.showConvertButton();
+                    if (this.showFloatingButton) {
+                        this.showConvertButton();
+                    }
                 } else {
                     this.hideConvertButton();
                 }
@@ -161,7 +202,9 @@ class BrowserKeymapConverter {
                 const end = activeElement.selectionEnd;
                 if (start !== end) {
                     this.currentSelection = activeElement.value.substring(start, end);
-                    this.showConvertButton();
+                    if (this.showFloatingButton) {
+                        this.showConvertButton();
+                    }
                 } else {
                     this.hideConvertButton();
                 }
@@ -187,49 +230,141 @@ class BrowserKeymapConverter {
     createFloatingButton() {
         if (document.getElementById('keymap-converter-float-btn')) return;
 
-        const button = document.createElement('div');
+        const button = document.createElement('img');
         button.id = 'keymap-converter-float-btn';
-        button.innerHTML = '🌐';
-        button.title = 'Convert text (Ctrl+Shift+K)';
+        button.src = chrome.runtime.getURL('icons/icon48.png');
+        button.title = 'Convert text (Ctrl+Shift+K)\nDrag to move';
+        
+        // Загружаем сохраненную позицию
+        const savedPosition = this.loadButtonPosition();
         
         Object.assign(button.style, {
             position: 'fixed',
-            top: '20px',
-            right: '20px',
-            width: '50px',
-            height: '50px',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-            borderRadius: '50%',
+            top: savedPosition.top,
+            right: savedPosition.right,
+            left: savedPosition.left,
+            bottom: savedPosition.bottom,
+            width: '48px',
+            height: '48px',
             display: 'none',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            fontSize: '20px',
+            cursor: 'move',
             zIndex: '2147483647', // максимальный z-index
-            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-            transition: 'all 0.3s ease',
-            fontFamily: 'Arial, sans-serif',
+            filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3))',
+            transition: 'transform 0.3s ease, filter 0.3s ease',
             userSelect: 'none'
         });
 
-        button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.handleConversion('auto');
+        // Переменные для drag and drop
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let buttonStartX = 0;
+        let buttonStartY = 0;
+
+        button.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return; // только левая кнопка мыши
+            
+            isDragging = true;
+            dragStartX = e.clientX;
+            dragStartY = e.clientY;
+            
+            const rect = button.getBoundingClientRect();
+            buttonStartX = rect.left;
+            buttonStartY = rect.top;
+            
+            button.style.transition = 'none';
+            button.classList.add('dragging');
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.clientX - dragStartX;
+            const deltaY = e.clientY - dragStartY;
+            
+            const newX = buttonStartX + deltaX;
+            const newY = buttonStartY + deltaY;
+            
+            // Ограничиваем позицию в пределах viewport
+            const maxX = window.innerWidth - 50;
+            const maxY = window.innerHeight - 50;
+            
+            const constrainedX = Math.max(0, Math.min(newX, maxX));
+            const constrainedY = Math.max(0, Math.min(newY, maxY));
+            
+            button.style.left = constrainedX + 'px';
+            button.style.top = constrainedY + 'px';
+            button.style.right = 'auto';
+            button.style.bottom = 'auto';
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                button.style.transition = 'transform 0.3s ease, filter 0.3s ease';
+                button.classList.remove('dragging');
+                
+                // Сохраняем новую позицию
+                this.saveButtonPosition(button);
+                
+                // Если кнопка не была перемещена значительно, это клик
+                const deltaX = Math.abs(e.clientX - dragStartX);
+                const deltaY = Math.abs(e.clientY - dragStartY);
+                if (deltaX < 5 && deltaY < 5) {
+                    this.handleConversion('auto');
+                }
+            }
         });
 
         button.addEventListener('mouseenter', () => {
-            button.style.transform = 'scale(1.15)';
-            button.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
+            if (!isDragging) {
+                button.style.transform = 'scale(1.15)';
+                button.style.filter = 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4))';
+            }
         });
 
         button.addEventListener('mouseleave', () => {
-            button.style.transform = 'scale(1)';
-            button.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+            if (!isDragging) {
+                button.style.transform = 'scale(1)';
+                button.style.filter = 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3))';
+            }
         });
 
         document.body.appendChild(button);
-        console.log('🔘 Плавающая кнопка создана');
+        console.log('🔘 Плавающая кнопка создана (можно перетаскивать)');
+    }
+
+    loadButtonPosition() {
+        try {
+            const saved = localStorage.getItem('keymapConverter-buttonPosition');
+            if (saved) {
+                const position = JSON.parse(saved);
+                // Проверяем, что позиция все еще в пределах видимой области
+                if (position.left !== 'auto' && parseInt(position.left) > window.innerWidth - 50) {
+                    return { top: '20px', right: '20px', left: 'auto', bottom: 'auto' };
+                }
+                return position;
+            }
+        } catch (e) {
+            console.error('Ошибка загрузки позиции кнопки:', e);
+        }
+        // Позиция по умолчанию
+        return { top: '20px', right: '20px', left: 'auto', bottom: 'auto' };
+    }
+
+    saveButtonPosition(button) {
+        try {
+            const position = {
+                top: button.style.top,
+                right: button.style.right,
+                left: button.style.left,
+                bottom: button.style.bottom
+            };
+            localStorage.setItem('keymapConverter-buttonPosition', JSON.stringify(position));
+        } catch (e) {
+            console.error('Ошибка сохранения позиции кнопки:', e);
+        }
     }
 
     showConvertButton() {

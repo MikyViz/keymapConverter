@@ -8,7 +8,9 @@
   
   "permissions": [
     "activeTab",
-    "contextMenus"
+    "contextMenus",
+    "scripting",
+    "storage"
   ],
   
   "host_permissions": [
@@ -28,6 +30,7 @@
   ],
   
   "action": {
+    "default_popup": "popup.html",
     "default_title": "Keymap Converter",
     "default_icon": {
       "16": "icons/icon16.png",
@@ -73,7 +76,7 @@
   
   "web_accessible_resources": [
     {
-      "resources": ["keymap-inspector.js"],
+      "resources": ["keymap-inspector.js", "icons/*.png"],
       "matches": ["<all_urls>"]
     }
   ]
