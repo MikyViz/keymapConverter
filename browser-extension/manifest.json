@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Keymap Converter",
-  "version": "2.1.0",
+  "version": "2.2.1",
   "description": "Fix text typed in wrong keyboard layout. Supports English, Russian, and Hebrew.",
   "author": "Michael David Vizenovsky",
   "homepage_url": "https://github.com/MikyViz/keymapConverter",

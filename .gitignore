@@ -3,3 +3,6 @@ node_modules
 browser-extension/keymap-inspector.js
 LEARNING-GUIDE.md
 2025-11-27.mp4
+# Билд-артефакты
+*.vsix
+*.zip
