@@ -103,7 +103,11 @@ class PopupKeymapConverter {
         const outputVariants = document.getElementById('outputVariants');
         
         if (!text.trim()) {
-            outputVariants.innerHTML = '<div class="empty-state">Enter text to convert</div>';
+            outputVariants.textContent = '';
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            emptyState.textContent = 'Enter text to convert';
+            outputVariants.appendChild(emptyState);
             return;
         }
 
@@ -166,7 +170,11 @@ class PopupKeymapConverter {
         const outputVariants = document.getElementById('outputVariants');
         
         if (variants.length === 0) {
-            outputVariants.innerHTML = '<div class="empty-state">No conversion needed</div>';
+            outputVariants.textContent = '';
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            emptyState.textContent = 'No conversion needed';
+            outputVariants.appendChild(emptyState);
             return;
         }
 
@@ -176,15 +184,22 @@ class PopupKeymapConverter {
             'he': '🇮🇱 עברית'
         };
 
-        outputVariants.innerHTML = '';
+        outputVariants.textContent = '';
         
         variants.forEach(variant => {
             const card = document.createElement('div');
             card.className = 'variant-card';
-            card.innerHTML = `
-                <div class="variant-title">${layoutNames[variant.layout]}</div>
-                <div class="variant-text">${this.escapeHtml(variant.text)}</div>
-            `;
+            
+            const title = document.createElement('div');
+            title.className = 'variant-title';
+            title.textContent = layoutNames[variant.layout];
+            
+            const text = document.createElement('div');
+            text.className = 'variant-text';
+            text.textContent = variant.text;
+            
+            card.appendChild(title);
+            card.appendChild(text);
             
             card.addEventListener('click', () => {
                 this.copyToClipboard(variant.text);

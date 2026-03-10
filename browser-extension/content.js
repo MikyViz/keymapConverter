@@ -452,21 +452,40 @@ class BrowserKeymapConverter {
         
         const preview = text.length > 60 ? text.substring(0, 60) + '...' : text;
         
-        menu.innerHTML = `
-            <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px;">🌐 Convert text</h3>
-            <div style="background: #f5f5f5; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-family: monospace; font-size: 14px; max-height: 100px; overflow-y: auto;">
-                "${preview}"
-            </div>
-            <div id="convert-variants" style="margin: 15px 0;"></div>
-            <div style="margin-top: 15px; text-align: right;">
-                <button id="close-menu" style="background: #e0e0e0; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;">Close</button>
-            </div>
-        `;
+        const h3 = document.createElement('h3');
+        Object.assign(h3.style, { margin: '0 0 15px 0', color: '#333', fontSize: '18px' });
+        h3.textContent = '🌐 Convert text';
+        
+        const previewDiv = document.createElement('div');
+        Object.assign(previewDiv.style, { background: '#f5f5f5', padding: '12px', borderRadius: '8px', marginBottom: '15px', fontFamily: 'monospace', fontSize: '14px', maxHeight: '100px', overflowY: 'auto' });
+        previewDiv.textContent = `"${preview}"`;
+        
+        const variantsDiv = document.createElement('div');
+        variantsDiv.id = 'convert-variants';
+        Object.assign(variantsDiv.style, { margin: '15px 0' });
+        
+        menu.appendChild(h3);
+        menu.appendChild(previewDiv);
+        menu.appendChild(variantsDiv);
+        
+        const closeButtonDiv = document.createElement('div');
+        Object.assign(closeButtonDiv.style, { marginTop: '15px', textAlign: 'right' });
+        
+        const closeButton = document.createElement('button');
+        closeButton.id = 'close-menu';
+        Object.assign(closeButton.style, { background: '#e0e0e0', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', transition: 'background 0.2s' });
+        closeButton.textContent = 'Close';
+        
+        closeButtonDiv.appendChild(closeButton);
+        menu.appendChild(closeButtonDiv);
 
         const variantsContainer = menu.querySelector('#convert-variants');
         
         if (variants.length === 0) {
-            variantsContainer.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No conversion needed</p>';
+            const noConversion = document.createElement('p');
+            Object.assign(noConversion.style, { color: '#666', textAlign: 'center', padding: '20px' });
+            noConversion.textContent = 'No conversion needed';
+            variantsContainer.appendChild(noConversion);
         } else {
             variants.forEach(variant => {
                 const button = document.createElement('button');
@@ -485,10 +504,19 @@ class BrowserKeymapConverter {
                     transition: 'all 0.2s'
                 });
                 
-                button.innerHTML = `
-                    <strong style="color: #667eea; font-size: 15px;">${this.getLayoutName(variant.layout)}</strong><br>
-                    <span style="color: #333;">${variant.text}</span>
-                `;
+                const strong = document.createElement('strong');
+                Object.assign(strong.style, { color: '#667eea', fontSize: '15px' });
+                strong.textContent = this.getLayoutName(variant.layout);
+                
+                const br = document.createElement('br');
+                
+                const span = document.createElement('span');
+                span.style.color = '#333';
+                span.textContent = variant.text;
+                
+                button.appendChild(strong);
+                button.appendChild(br);
+                button.appendChild(span);
                 
                 button.addEventListener('mouseenter', () => {
                     button.style.background = '#667eea';

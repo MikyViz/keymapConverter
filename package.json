@@ -47,6 +47,7 @@
     "@types/node": "^18.19.122",
     "@types/vscode": "^1.74.0",
     "live-server": "^1.2.0",
+    "sharp": "^0.34.5",
     "typescript": "^4.9.4"
   },
   "engines": {
