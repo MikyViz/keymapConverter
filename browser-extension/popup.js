@@ -35,12 +35,14 @@ class PopupKeymapConverter {
             'en_ru': {
                 'q': 'й', 'w': 'ц', 'e': 'у', 'r': 'к', 't': 'е', 'y': 'н', 'u': 'г', 'i': 'ш', 'o': 'щ', 'p': 'з',
                 'a': 'ф', 's': 'ы', 'd': 'в', 'f': 'а', 'g': 'п', 'h': 'р', 'j': 'о', 'k': 'л', 'l': 'д',
-                'z': 'я', 'x': 'ч', 'c': 'с', 'v': 'м', 'b': 'и', 'n': 'т', 'm': 'ь'
+                'z': 'я', 'x': 'ч', 'c': 'с', 'v': 'м', 'b': 'и', 'n': 'т', 'm': 'ь',
+                '[': 'х', ']': 'ъ', ';': 'ж', '\'': 'э', ',': 'б', '.': 'ю', '/': '.'
             },
             'en_he': {
-                'q': 'ק', 'w': 'ו', 'e': 'ע', 'r': 'ר', 't': 'ת', 'y': 'י', 'u': 'ו', 'i': 'י', 'o': 'ו', 'p': 'פ',
-                'a': 'א', 's': 'ס', 'd': 'ד', 'f': 'פ', 'g': 'ג', 'h': 'ה', 'j': 'י', 'k': 'כ', 'l': 'ל',
-                'z': 'ז', 'x': 'ח', 'c': 'צ', 'v': 'ו', 'b': 'ב', 'n': 'נ', 'm': 'מ'
+                'q': '/', 'w': '\'', 'e': 'ק', 'r': 'ר', 't': 'א', 'y': 'ט', 'u': 'ו', 'i': 'ן', 'o': 'ם', 'p': 'פ',
+                'a': 'ש', 's': 'ד', 'd': 'ג', 'f': 'כ', 'g': 'ע', 'h': 'י', 'j': 'ח', 'k': 'ל', 'l': 'ך',
+                'z': 'ז', 'x': 'ס', 'c': 'ב', 'v': 'ה', 'b': 'נ', 'n': 'מ', 'm': 'צ',
+                '[': ']', ']': '[', ';': 'ף', '\'': ',', ',': 'ת', '.': 'ץ', '/': '.'
             }
         };
         this.isReady = true;
@@ -149,8 +151,11 @@ class PopupKeymapConverter {
             const ruToEn = Object.fromEntries(
                 Object.entries(this.layoutMaps.en_ru).map(([k, v]) => [v, k])
             );
+            const heToEn = Object.fromEntries(
+                Object.entries(this.layoutMaps.en_he).map(([k, v]) => [v, k])
+            );
             result = Array.from(text).map(char => {
-                return ruToEn[char.toLowerCase()] || char;
+                return ruToEn[char.toLowerCase()] || heToEn[char] || char;
             }).join('');
         } else if (targetLayout === 'he') {
             // EN -> HE
