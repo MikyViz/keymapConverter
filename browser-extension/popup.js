@@ -137,34 +137,35 @@ class PopupKeymapConverter {
     }
 
     convertToLayout(text, targetLayout) {
-        // Простая конвертация (в реальном расширении используется keymap-inspector)
-        const lowerText = text.toLowerCase();
-        let result = text;
+        // Приводим любой символ (en/ru/he) к физической клавише (en), затем к целевой раскладке.
+        // Это позволяет конвертировать между RU и HE напрямую, а не только через EN.
+        const ruToEn = Object.fromEntries(
+            Object.entries(this.layoutMaps.en_ru).map(([k, v]) => [v, k])
+        );
+        const heToEn = Object.fromEntries(
+            Object.entries(this.layoutMaps.en_he).map(([k, v]) => [v, k])
+        );
 
-        if (targetLayout === 'ru') {
-            // EN -> RU
-            result = Array.from(lowerText).map(char => {
-                return this.layoutMaps.en_ru[char] || char;
-            }).join('');
-        } else if (targetLayout === 'en') {
-            // RU -> EN или HE -> EN
-            const ruToEn = Object.fromEntries(
-                Object.entries(this.layoutMaps.en_ru).map(([k, v]) => [v, k])
-            );
-            const heToEn = Object.fromEntries(
-                Object.entries(this.layoutMaps.en_he).map(([k, v]) => [v, k])
-            );
-            result = Array.from(text).map(char => {
-                return ruToEn[char.toLowerCase()] || heToEn[char] || char;
-            }).join('');
-        } else if (targetLayout === 'he') {
-            // EN -> HE
-            result = Array.from(lowerText).map(char => {
-                return this.layoutMaps.en_he[char] || char;
-            }).join('');
-        }
+        return Array.from(text).map(char => {
+            const lowerChar = char.toLowerCase();
+            const physicalKey = this.layoutMaps.en_ru[lowerChar] ? lowerChar
+                : this.layoutMaps.en_he[lowerChar] ? lowerChar
+                : ruToEn[lowerChar] || heToEn[char];
 
-        return result;
+            if (!physicalKey) {
+                return char;
+            }
+
+            if (targetLayout === 'en') {
+                return physicalKey;
+            } else if (targetLayout === 'ru') {
+                return this.layoutMaps.en_ru[physicalKey] || char;
+            } else if (targetLayout === 'he') {
+                return this.layoutMaps.en_he[physicalKey] || char;
+            }
+
+            return char;
+        }).join('');
     }
 
     displayResults(variants, originalText) {
